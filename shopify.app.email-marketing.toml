@@ -1,0 +1,27 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "email-marketing"
+client_id = "d2afca44454d64a1f04257f76f81f9b1"
+application_url = "https://tft-handy-stops-arise.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://tft-handy-stops-arise.trycloudflare.com/auth/callback",
+  "https://tft-handy-stops-arise.trycloudflare.com/auth/shopify/callback",
+  "https://tft-handy-stops-arise.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-01"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "grocery-shop-23.myshopify.com"
