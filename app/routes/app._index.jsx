@@ -407,7 +407,7 @@ export default function Index() {
           ]}
           itemCount={edges?.length}
           resourceName={resourceName}
-          selectable={false}
+          // selectable={false}
           selectedItemsCount={
             allResourcesSelected ? "All" : selectedResources?.length
           }
