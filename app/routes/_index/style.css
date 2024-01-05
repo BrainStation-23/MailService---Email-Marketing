@@ -51,6 +51,14 @@ label {
 input[type="text"] {
   padding: 0.4rem;
 }
+.test .Polaris-Icon {
+  height: 100% !important;
+  width: 100% !important;
+  color: antiquewhite;
+}
+.test {
+  color: red;
+}
 
 button {
   padding: 0.4rem;

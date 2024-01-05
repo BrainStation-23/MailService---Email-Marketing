@@ -2,7 +2,7 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://tft-handy-stops-arise.trycloudflare.com"
+application_url = "https://engage-restored-crazy-junk.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://tft-handy-stops-arise.trycloudflare.com/auth/callback",
-  "https://tft-handy-stops-arise.trycloudflare.com/auth/shopify/callback",
-  "https://tft-handy-stops-arise.trycloudflare.com/api/auth/callback"
+  "https://engage-restored-crazy-junk.trycloudflare.com/auth/callback",
+  "https://engage-restored-crazy-junk.trycloudflare.com/auth/shopify/callback",
+  "https://engage-restored-crazy-junk.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
