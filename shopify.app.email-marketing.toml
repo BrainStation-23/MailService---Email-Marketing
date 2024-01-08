@@ -2,7 +2,7 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://zealand-walking-villa-hide.trycloudflare.com"
+application_url = "https://fresh-elvis-rid-css.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://zealand-walking-villa-hide.trycloudflare.com/auth/callback",
-  "https://zealand-walking-villa-hide.trycloudflare.com/auth/shopify/callback",
-  "https://zealand-walking-villa-hide.trycloudflare.com/api/auth/callback"
+  "https://fresh-elvis-rid-css.trycloudflare.com/auth/callback",
+  "https://fresh-elvis-rid-css.trycloudflare.com/auth/shopify/callback",
+  "https://fresh-elvis-rid-css.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

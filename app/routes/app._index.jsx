@@ -16,10 +16,6 @@ import {
   Card,
   Button,
   BlockStack,
-  Box,
-  List,
-  Link,
-  InlineStack,
   Divider,
   Sheet,
   TextField,
@@ -36,10 +32,13 @@ import {
   EmptyState,
   Pagination,
   Spinner,
+  MediaCard,
   Modal,
 } from "@shopify/polaris";
 import { EmailMajor, ImageMajor } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
+import productSimple from "./images/productSimple.png";
+
 import {
   QUERY_NEXT_ORDERS,
   QUERY_PRODUCT,
@@ -81,8 +80,103 @@ export const loader = async ({ request }) => {
 
 //   return null;
 // };
+// export const action = async ({ request }) => {
+//   const { admin, session } = await authenticate.admin(request);
+
+//   const data = {
+//     ...Object.fromEntries(await request.formData()),
+//   };
+//   console.log(data);
+//   let products;
+//   let error;
+
+//   // @ts-ignore
+
+//   let selectedProduct;
+//   let selectedProductImages = [];
+//   let imagesForProduct;
+//   const variablesObj = {
+//     query: data.query,
+//   };
+
+//   try {
+//     if (data.action === "selected") {
+//       console.log("selected");
+//       const selectedResources = data.selectedResources.split(",");
+//       selectedProduct = await admin.rest.resources.Product.all({
+//         session: session,
+//         ids: selectedResources.join(","),
+//       });
+//       selectedProductImages = await Promise.all(
+//         selectedResources.map(async (productId) => {
+//           imagesForProduct = await admin.rest.resources.Image.all({
+//             session: session,
+//             product_id: productId,
+//           });
+//           return imagesForProduct;
+//         })
+//       );
+
+//       console.log(selectedProductImages);
+//       console.log(selectedProduct);
+//     } else if (data.action === "next") {
+//       console.log("YES next it is ");
+//       // @ts-ignore
+//       products = await admin.graphql(QUERY_NEXT_ORDERS, {
+//         variables: {
+//           first: PER_PAGE_PRODUCT_TO_SHOW,
+//           after: data.after,
+//           ...variablesObj,
+//         },
+//       });
+//       console.log(products);
+//     } else if (data.action === "previous") {
+//       console.log("YES previous it is ");
+//       // @ts-ignore
+//       products = await admin.graphql(QUERY_PREVIOUS_ORDERS, {
+//         variables: {
+//           last: PER_PAGE_PRODUCT_TO_SHOW,
+//           before: data.before,
+//           ...variablesObj,
+//         },
+//       });
+//     } else if (data.action === "filter" || data.action === "sort") {
+//       // @ts-ignore
+//       products = await admin.graphql(QUERY_PRODUCT, {
+//         variables: {
+//           query: data.query,
+//           input: PER_PAGE_PRODUCT_TO_SHOW,
+//         },
+//       });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return json({
+//       products: [],
+//       error: "Something went wrong. Please try again !",
+//     });
+//   }
+
+//   console.log(JSON.stringify(products));
+
+//   // @ts-ignore
+//   console.log(products);
+
+//   console.log("products == " + products);
+//   console.log(selectedProduct?.data);
+//   console.log(imagesForProduct?.data);
+//   console.log(JSON.stringify(selectedProductImages?.data));
+//   console.log(selectedProductImages?.data);
+//   console.log(selectedProductImages);
+//   return json({
+//     products: await products?.json(),
+//     selectedProduct: selectedProduct?.data,
+//     selectedProductImages: selectedProductImages?.data,
+//     error,
+//   });
+// };
 export const action = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
+  const { admin, session } = await authenticate.admin(request);
 
   const data = {
     ...Object.fromEntries(await request.formData()),
@@ -93,22 +187,34 @@ export const action = async ({ request }) => {
 
   // @ts-ignore
 
+  let selectedProduct;
+  let selectedProductImages = [];
+  let imagesForProduct;
   const variablesObj = {
     query: data.query,
   };
 
   try {
-    // if (data.action === "initial") {
-    //   console.log("It is inital ");
-    //   products = await admin.graphql(QUERY_PRODUCT, {
-    //     variables: {
-    //       input: PER_PAGE_PRODUCT_TO_SHOW,
-    //       ...variablesObj,
-    //     },
-    //   });
-    //   console.log(products);
-    // } else
-    if (data.action === "next") {
+    if (data.action === "selected") {
+      console.log("selected");
+      const selectedResources = data.selectedResources.split(",");
+      selectedProduct = await admin.rest.resources.Product.all({
+        session: session,
+        ids: selectedResources.join(","),
+      });
+      selectedProductImages = await Promise.all(
+        selectedResources.map(async (productId) => {
+          imagesForProduct = await admin.rest.resources.Image.all({
+            session: session,
+            product_id: productId,
+          });
+          return imagesForProduct.data[0]; // Get the first image source
+        })
+      );
+
+      console.log(selectedProductImages);
+      console.log(selectedProduct);
+    } else if (data.action === "next") {
       console.log("YES next it is ");
       // @ts-ignore
       products = await admin.graphql(QUERY_NEXT_ORDERS, {
@@ -142,7 +248,7 @@ export const action = async ({ request }) => {
     console.log(error);
     return json({
       products: [],
-      error: "Something went wrong. Please try again !",
+      error: "Something went wrong. Please try again!",
     });
   }
 
@@ -150,10 +256,16 @@ export const action = async ({ request }) => {
 
   // @ts-ignore
   console.log(products);
-  products = await products.json();
+
   console.log("products == " + products);
+  console.log(selectedProduct?.data);
+  console.log(imagesForProduct?.data);
+  console.log(JSON.stringify(selectedProductImages));
+  console.log(selectedProductImages);
   return json({
-    products,
+    products: await products?.json(),
+    selectedProduct: selectedProduct?.data,
+    selectedProductImages: selectedProductImages,
     error,
   });
 };
@@ -161,11 +273,20 @@ export const action = async ({ request }) => {
 export default function Index() {
   const nav = useNavigation();
   const actionData = useActionData();
+  console.log("actionData" + actionData);
+  console.log(
+    "the selected product " + JSON.stringify(actionData?.selectedProduct)
+  );
+  console.log(
+    "the selected product images " +
+      JSON.stringify(actionData?.selectedProductImages)
+  );
   console.log(JSON.stringify(actionData?.products));
   const submit = useSubmit();
   const loaderData = useLoaderData();
   console.log(loaderData);
   console.log(loaderData.shopData.name);
+  // console.log(loaderData.selectedProduct);
   // State
   const [subject, setSubject] = useState(null);
   const [previewText, setPreviewText] = useState(null);
@@ -349,7 +470,17 @@ export default function Index() {
     // console.log(order);
     return STATUS[order];
   };
-
+  const handleSelectedProduct = () => {
+    submit(
+      // @ts-ignore
+      {
+        action: "selected",
+        selectedResources,
+        // @ts-ignore
+      },
+      { method: "POST" }
+    );
+  };
   const renderOrdersTable = () => {
     return (
       <>
@@ -524,7 +655,6 @@ export default function Index() {
         ) : error ? (
           <Page style={{ padding: "10px", backgroundColor: "#db1111" }}>
             <Card style={{ padding: "10px", backgroundColor: "#db1111" }}>
-              {/* Something went wrong */}
               <Spinner accessibilityLabel="Spinner example" size="small" />;
             </Card>
           </Page>
@@ -608,6 +738,8 @@ export default function Index() {
 
   return (
     <Page>
+      <p>{selectedResources}</p>
+
       <div style={{ marginBottom: "1rem" }}>
         <Card>
           <div
@@ -665,7 +797,7 @@ export default function Index() {
                       title="Reach more shoppers with Instagram product tags"
                       primaryAction={{
                         content: "Save",
-                        onAction: handleChange,
+                        onAction: handleSelectedProduct,
                       }}
                     >
                       {renderProductModal()}
@@ -683,12 +815,6 @@ export default function Index() {
                     <Text variant="headingLg" as="h2">
                       {loaderData?.shopData?.name}
                     </Text>
-                    {/* <Text variant="headingSm" as="h6" fontWeight="regular">
-                      {loaderData?.shopData?.shop_owner}
-                    </Text>
-                    <Text variant="headingSm" as="h6" fontWeight="regular">
-                      {loaderData?.shopData?.country_name}
-                    </Text> */}
                   </div>
                 </BlockStack>
                 <div
@@ -728,7 +854,7 @@ export default function Index() {
                       colorSubtext.alpha
                     })`,
                     margin: "auto",
-                    marginTop: "1rem",
+                    // marginTop: "1rem",
                     height: `${lineHeightSubtext}px`,
                     display: "flex",
                     alignItems: "center",
@@ -754,28 +880,78 @@ export default function Index() {
                     </div>
                   </Tooltip>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    gap: "3rem",
-                    marginTop: "2rem",
-                  }}
-                  onClick={handleClickProduct}
-                >
-                  <div className="test">
-                    <Icon
-                      source={ImageMajor}
-                      tone="base"
-                      style={{ height: "200px", width: "200px" }}
-                    />
+
+                <Tooltip active content="Click here to add the product">
+                  {" "}
+                  <div
+                    style={{
+                      margin: "1rem 0 1rem 0",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleClickProduct}
+                  >
+                    {selectedResources.length == 0 ? (
+                      <div style={{ border: "1px solid black" }}>
+                        <img
+                          alt=""
+                          width="100%"
+                          height="100%"
+                          style={{
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                          src={productSimple}
+                        />
+                      </div>
+                    ) : (
+                      actionData?.selectedProduct?.map((data, index) => (
+                        <div
+                          style={{
+                            border: "1px solid black",
+                            marginBottom: "1rem",
+                            padding: "1rem",
+                            display: "flex",
+                            gap: "2rem",
+                            alignItems: "center",
+                          }}
+                          key={data.id}
+                        >
+                          <div>
+                            {actionData?.selectedProductImages
+                              .filter(
+                                (imageData) => imageData.product_id === data.id
+                              )
+                              .map((filteredImageData, index) => (
+                                <img
+                                  alt=""
+                                  width="180px"
+                                  height="200px"
+                                  style={{
+                                    objectFit: "cover",
+                                    objectPosition: "center",
+                                  }}
+                                  src={filteredImageData.src}
+                                  key={index}
+                                />
+                              ))}
+                          </div>
+
+                          <div style={{ lineHeight: "1.5" }}>
+                            <h1 style={{ fontSize: "20px", fontWeight: "400" }}>
+                              {data.title}
+                            </h1>
+                            <h3 style={{ fontSize: "16px", fontWeight: "600" }}>
+                              {" "}
+                              {loaderData?.shopData?.currency}{" "}
+                              {data.variants[0]?.price}{" "}
+                            </h3>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
-                  <div>
-                    <p>Title</p>
-                    <p>Price</p>
-                    <p>In stock</p>
-                  </div>
-                </div>
+                </Tooltip>
+
                 <div
                   className="footer"
                   style={{
@@ -810,12 +986,6 @@ export default function Index() {
         </Layout.Section>
         <Layout.Section variant="oneThird">
           <Card>
-            {/* <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="email-alerts" mb="0">
-                Enable email alerts?
-              </FormLabel>
-              <Switch id="email-alerts" />
-            </FormControl> */}
             {sheetDiscount && (
               <div>
                 <Sheet
@@ -985,7 +1155,7 @@ export default function Index() {
                       width: "100%",
                     }}
                   >
-                    <Button onClick={toggleSheetActive}>Cancel</Button>
+                    <Button onClick={toggleSheetActiveSubtext}>Cancel</Button>
                   </div>
                 </Sheet>
               </div>
@@ -996,74 +1166,6 @@ export default function Index() {
           </Card>
         </Layout.Section>
       </Layout>
-
-      {/* <div style={{ marginBottom: "1rem" }}>
-        <Card>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "end",
-            }}
-          >
-            <Button variant="primary" tone="success" icon={EmailMajor}>
-              Send email
-            </Button>
-          </div>{" "}
-        </Card>
-      </div> */}
-
-      {/* <div>
-        <Card>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "1rem",
-            }}
-          >
-            <div style={{ width: "40%" }}>
-              <p>{subject}</p>
-              <TextField
-                label="Subject"
-                value={subject}
-                onChange={handleChangeSubject}
-                autoComplete="off"
-                placeholder="Subject"
-              />
-            </div>
-
-            <div style={{ width: "55%" }}>
-              <p>{previewText}</p>
-
-              <TextField
-                label="Preview Text"
-                value={previewText}
-                onChange={handleChangePreviewText}
-                multiline={4}
-                autoComplete="off"
-              />
-            </div>
-          </div>
-          <Divider borderColor="border" />
-          <div
-            style={{
-              background: "#faf6f3",
-              width: "80%",
-              margin: "auto",
-              marginTop: "1rem",
-              height: "200px",
-              fontSize: "4rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div>
-              <p>{offertext}</p>
-            </div>
-          </div>
-        </Card>
-      </div> */}
     </Page>
   );
 }
