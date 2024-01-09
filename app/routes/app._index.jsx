@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from "react";
 import { json } from "@remix-run/node";
-// import { Switch, FormControl, FormLabel } from "@chakra-ui/react";
+import { sendMail } from "../email.server";
+// import { render } from "@react-email/render";
 import {
   useActionData,
   useLoaderData,
@@ -34,6 +35,7 @@ import {
   Spinner,
   MediaCard,
   Modal,
+  InlineStack,
 } from "@shopify/polaris";
 import { EmailMajor, ImageMajor } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
@@ -181,6 +183,25 @@ export const action = async ({ request }) => {
   const data = {
     ...Object.fromEntries(await request.formData()),
   };
+  console.log(data.destinationMail);
+  console.log(data.shopData);
+  console.log(data.selectedProduct);
+
+  if (data.action == "sendmail") {
+    sendMail(
+      data.destinationMail,
+      data.subject,
+      data.previewText,
+      data.maildiv,
+      data.offertext,
+      data.subtext,
+      data.shopData,
+      data.selectedProduct,
+      data.selectedProductImages,
+      data.offetTextDesign
+    );
+  }
+
   console.log(data);
   let products;
   let error;
@@ -294,14 +315,16 @@ export default function Index() {
   const [subtext, setSubtext] = useState(
     "To kick off the New Year on a high note, we're thrilled to announce our Warehouse Liquidation Event"
   );
+  const [destinationMail, setDestinationMail] = useState();
   // main text
   const [fontSize, setFontSize] = useState(60);
-  const [lineHeight, setLineHeight] = useState(150);
+  const [lineHeight, setLineHeight] = useState(110);
   const [sheetDiscount, setSheetDiscount] = useState(false);
+  const [mailActive, setMailActve] = useState(false);
   // subtext
 
   const [fontSizeSubtext, setFontSizeSubtext] = useState(15);
-  const [lineHeightSubtext, setLineHeightSubtext] = useState(150);
+  const [lineHeightSubtext, setLineHeightSubtext] = useState(125);
   const [sheetSubtext, setSheetSubtext] = useState(false);
   const [productModal, setProductModal] = useState(false);
 
@@ -330,6 +353,9 @@ export default function Index() {
 
   const handleChangeSubject = useCallback((newValue) => setSubject(newValue));
   const handleRangeFontSizeChange = useCallback((value) => setFontSize(value));
+  const handleChangeDestinationMail = useCallback((newValue) =>
+    setDestinationMail(newValue)
+  );
   const handleRangeFontSizeChangeSubtext = useCallback((value) =>
     setFontSizeSubtext(value)
   );
@@ -364,6 +390,60 @@ export default function Index() {
   const handleChangeProductModal = () => {
     setProductModal(false);
   };
+  const handleChangeMailActive = () => {
+    setMailActve(false);
+  };
+  const openSendMail = () => {
+    setMailActve(true);
+  };
+
+  // const handleSendMail = () => {
+  //   const maildiv =
+  //     document.getElementsByClassName("email__marketing")[0].innerHTML;
+  //   console.log(maildiv);
+  //   sendMail(destinationMail, subject, previewText, maildiv);
+
+  //   console.log("send mail");
+  // };
+
+  const shopData = {
+    name: loaderData?.shopData?.name,
+    city: loaderData?.shopData?.city,
+    zip: loaderData?.shopData?.zip,
+    country_name: loaderData?.shopData?.country_name,
+    email: loaderData?.shopData?.email,
+  };
+
+  const handleSendMail = () => {
+    const maildiv =
+      document.getElementsByClassName("email__marketing")[0].innerHTML;
+    console.log(maildiv);
+    // sendMail(destinationMail, subject, previewText, maildiv);
+    submit(
+      {
+        action: "sendmail",
+        destinationMail,
+        subject,
+        previewText,
+        maildiv,
+        offertext,
+        subtext,
+        shopData: JSON.stringify(shopData),
+        selectedProduct: JSON.stringify(actionData?.selectedProduct),
+        selectedProductImages: JSON.stringify(
+          actionData?.selectedProductImages
+        ),
+        offetTextDesign: JSON.stringify(offetTextDesign),
+      },
+      {
+        method: "POST",
+        // action: "/send",
+      }
+    );
+
+    console.log("send mail");
+  };
+
   const handelOfferText = useCallback((newValue) => setOffertext(newValue));
   const handelSubtext = useCallback((newValue) => setSubtext(newValue));
 
@@ -735,10 +815,28 @@ export default function Index() {
       </>
     );
   };
+  const offertextP = {
+    fontSize: `${fontSize}px`,
+    lineHeight: "1",
+  };
+  const offetTextDesign = {
+    background: `rgba(${color.hue}, ${color.saturation * 100}, ${
+      color.brightness * 100
+    }, ${color.alpha})`,
+    margin: "auto",
+    marginTop: "1rem",
+    height: `${lineHeight}px`,
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    textAlign: "center",
+    padding: "1rem 0",
+    ...offertextP,
+  };
 
   return (
     <Page>
-      <p>{selectedResources}</p>
+      {/* <p>{selectedResources}</p> */}
 
       <div style={{ marginBottom: "1rem" }}>
         <Card>
@@ -748,10 +846,35 @@ export default function Index() {
               justifyContent: "end",
             }}
           >
-            <Button variant="primary" tone="success" icon={EmailMajor}>
+            <Button
+              variant="primary"
+              tone="success"
+              icon={EmailMajor}
+              onClick={openSendMail}
+            >
               Send email
             </Button>
           </div>{" "}
+          <div className="send-mail__modal">
+            <Modal
+              open={mailActive}
+              onClose={handleChangeMailActive}
+              title="Destination email"
+              primaryAction={{
+                content: "Send",
+                onAction: handleSendMail,
+              }}
+            >
+              <Modal.Section>
+                <TextField
+                  placeholder="Destination email"
+                  value={destinationMail}
+                  onChange={handleChangeDestinationMail}
+                  autoComplete="off"
+                />
+              </Modal.Section>
+            </Modal>
+          </div>
         </Card>
       </div>
       <Layout>
@@ -789,196 +912,196 @@ export default function Index() {
                   </div>
                 </div>
                 <Divider borderColor="border" />
-                <BlockStack gap="300">
-                  {productModal && (
-                    <Modal
-                      open={productModal}
-                      onClose={handleChangeProductModal}
-                      title="Reach more shoppers with Instagram product tags"
-                      primaryAction={{
-                        content: "Save",
-                        onAction: handleSelectedProduct,
+                <div className="email__marketing">
+                  <BlockStack gap="300">
+                    {productModal && (
+                      <Modal
+                        open={productModal}
+                        onClose={handleChangeProductModal}
+                        title="Reach more shoppers with Instagram product tags"
+                        primaryAction={{
+                          content: "Save",
+                          onAction: handleSelectedProduct,
+                        }}
+                      >
+                        {renderProductModal()}
+                      </Modal>
+                    )}
+
+                    <div
+                      style={{
+                        textAlign: "center",
                       }}
                     >
-                      {renderProductModal()}
-                    </Modal>
-                  )}
+                      <Text variant="headingLg" as="h1">
+                        {loaderData?.shopData?.name}
+                      </Text>
+                    </div>
+                  </BlockStack>
+                  <div style={offetTextDesign} onClick={handleClick}>
+                    <BlockStack gap={"200"}>
+                      <Tooltip active content="Click here to chenge the text">
+                        <Text variant="headingLg" as="h5">
+                          <p style={offertextP}> {offertext}</p>
+                        </Text>
+                      </Tooltip>{" "}
+                    </BlockStack>
+                  </div>
+
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "end",
-                      flexDirection: "column",
+                      background: `rgba(${colorSubtext.hue}, ${
+                        colorSubtext.saturation * 100
+                      }, ${colorSubtext.brightness * 100}, ${
+                        colorSubtext.alpha
+                      })`,
+                      margin: "auto",
+                      // marginTop: "1rem",
+                      height: `${lineHeightSubtext}px`,
                       alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <Text variant="headingLg" as="h2">
-                      {loaderData?.shopData?.name}
-                    </Text>
-                  </div>
-                </BlockStack>
-                <div
-                  style={{
-                    background: `rgba(${color.hue}, ${
-                      color.saturation * 100
-                    }, ${color.brightness * 100}, ${color.alpha})`,
-                    margin: "auto",
-                    marginTop: "1rem",
-                    height: `${lineHeight}px`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                  }}
-                  onClick={handleClick}
-                >
-                  <Tooltip active content="Click here to chenge the text">
-                    <div>
-                      <Text variant="headingLg" as="h5">
-                        <p
-                          style={{ fontSize: `${fontSize}px`, lineHeight: "1" }}
-                        >
-                          {" "}
-                          {offertext}
-                        </p>
-                      </Text>
-                    </div>
-                  </Tooltip>
-                </div>
-
-                <div
-                  style={{
-                    background: `rgba(${colorSubtext.hue}, ${
-                      colorSubtext.saturation * 100
-                    }, ${colorSubtext.brightness * 100}, ${
-                      colorSubtext.alpha
-                    })`,
-                    margin: "auto",
-                    // marginTop: "1rem",
-                    height: `${lineHeightSubtext}px`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    textAlign: "center",
-                  }}
-                  onClick={handleClickSubtext}
-                >
-                  <Tooltip active content="Click here to chenge the text">
-                    <div>
-                      <Text variant="headingLg" as="h5">
-                        <p
-                          style={{
-                            fontSize: `${fontSizeSubtext}px`,
-                            lineHeight: "1.3",
-                          }}
-                        >
-                          {" "}
-                          {subtext}
-                        </p>
-                      </Text>
-                    </div>
-                  </Tooltip>
-                </div>
-
-                <Tooltip active content="Click here to add the product">
-                  {" "}
-                  <div
-                    style={{
-                      margin: "1rem 0 1rem 0",
+                      justifyContent: "center",
                       cursor: "pointer",
+                      textAlign: "center",
+                      paddingTop: "2rem",
                     }}
-                    onClick={handleClickProduct}
+                    onClick={handleClickSubtext}
                   >
-                    {selectedResources.length == 0 ? (
-                      <div style={{ border: "1px solid black" }}>
-                        <img
-                          alt=""
-                          width="100%"
-                          height="100%"
-                          style={{
-                            objectFit: "cover",
-                            objectPosition: "center",
-                          }}
-                          src={productSimple}
-                        />
+                    <Tooltip active content="Click here to chenge the text">
+                      <div>
+                        <Text variant="headingLg" as="h5">
+                          <p
+                            style={{
+                              fontSize: `${fontSizeSubtext}px`,
+                              lineHeight: "1.3",
+                            }}
+                          >
+                            {" "}
+                            {subtext}
+                          </p>
+                        </Text>
                       </div>
-                    ) : (
-                      actionData?.selectedProduct?.map((data, index) => (
-                        <div
-                          style={{
-                            border: "1px solid black",
-                            marginBottom: "1rem",
-                            padding: "1rem",
-                            display: "flex",
-                            gap: "2rem",
-                            alignItems: "center",
-                          }}
-                          key={data.id}
-                        >
-                          <div>
-                            {actionData?.selectedProductImages
-                              .filter(
-                                (imageData) => imageData.product_id === data.id
-                              )
-                              .map((filteredImageData, index) => (
-                                <img
-                                  alt=""
-                                  width="180px"
-                                  height="200px"
-                                  style={{
-                                    objectFit: "cover",
-                                    objectPosition: "center",
-                                  }}
-                                  src={filteredImageData.src}
-                                  key={index}
-                                />
-                              ))}
-                          </div>
-
-                          <div style={{ lineHeight: "1.5" }}>
-                            <h1 style={{ fontSize: "20px", fontWeight: "400" }}>
-                              {data.title}
-                            </h1>
-                            <h3 style={{ fontSize: "16px", fontWeight: "600" }}>
-                              {" "}
-                              {loaderData?.shopData?.currency}{" "}
-                              {data.variants[0]?.price}{" "}
-                            </h3>
-                          </div>
-                        </div>
-                      ))
-                    )}
+                    </Tooltip>
                   </div>
-                </Tooltip>
 
-                <div
-                  className="footer"
-                  style={{
-                    display: "flex",
-                    alignContent: "center",
-                    textAlign: "center",
-                    flexDirection: "column",
-                    background: "black",
-                    color: "white",
-                    padding: "1rem",
-                  }}
-                >
-                  <Text variant="headingLg" as="h2">
-                    {loaderData?.shopData?.name}
-                  </Text>
-                  <Text variant="headingSm" as="h6" fontWeight="regular">
-                    {loaderData?.shopData?.city}, {loaderData?.shopData?.zip}
-                  </Text>
-                  <Text variant="headingSm" as="h6" fontWeight="regular">
-                    {loaderData?.shopData?.country_name}
-                  </Text>
-                  <Text variant="headingSm" as="h6" fontWeight="regular">
-                    {loaderData?.shopData?.email}
-                  </Text>
-                  <Text variant="headingSm" as="h6" fontWeight="regular">
-                    {loaderData?.shopData?.phone}
-                  </Text>
+                  <Tooltip active content="Click here to add the product">
+                    {" "}
+                    <div
+                      style={{
+                        margin: "1rem 0 1rem 0",
+                        cursor: "pointer",
+                      }}
+                      onClick={handleClickProduct}
+                    >
+                      {selectedResources.length == 0 ? (
+                        <div style={{ border: "1px solid black" }}>
+                          <img
+                            alt=""
+                            width="100%"
+                            height="100%"
+                            style={{
+                              objectFit: "cover",
+                              objectPosition: "center",
+                            }}
+                            src={productSimple}
+                          />
+                        </div>
+                      ) : (
+                        actionData?.selectedProduct?.map((data, index) => (
+                          <div
+                            style={{
+                              border: "1px solid black",
+                              marginBottom: "1rem",
+                              padding: "1rem",
+                              gap: "2rem",
+                              alignItems: "center",
+                            }}
+                            key={data.id}
+                          >
+                            <InlineStack gap={"800"}>
+                              <InlineStack gap="200">
+                                {" "}
+                                <div>
+                                  {actionData?.selectedProductImages
+                                    .filter(
+                                      (imageData) =>
+                                        imageData.product_id === data.id
+                                    )
+                                    .map((filteredImageData, index) => (
+                                      <img
+                                        alt=""
+                                        width="180px"
+                                        height="200px"
+                                        style={{
+                                          objectFit: "cover",
+                                          objectPosition: "center",
+                                        }}
+                                        src={filteredImageData.src}
+                                        key={index}
+                                      />
+                                    ))}
+                                </div>
+                              </InlineStack>
+                              <InlineStack gap="200" blockAlign="center">
+                                {" "}
+                                <div style={{ lineHeight: "1.5" }}>
+                                  <h1
+                                    style={{
+                                      fontSize: "20px",
+                                      fontWeight: "400",
+                                    }}
+                                  >
+                                    {data.title}
+                                  </h1>
+                                  <h3
+                                    style={{
+                                      fontSize: "16px",
+                                      fontWeight: "600",
+                                    }}
+                                  >
+                                    {" "}
+                                    {loaderData?.shopData?.currency}{" "}
+                                    {data.variants[0]?.price}{" "}
+                                  </h3>
+                                </div>
+                              </InlineStack>
+                            </InlineStack>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </Tooltip>
+
+                  <div
+                    className="footer"
+                    style={{
+                      // display: "flex",
+                      alignContent: "center",
+                      textAlign: "center",
+                      flexDirection: "column",
+                      background: "black",
+                      color: "white",
+                      padding: "1rem",
+                    }}
+                  >
+                    <BlockStack gap={"200"}>
+                      <Text variant="headingLg" as="h1">
+                        {loaderData?.shopData?.name}
+                      </Text>
+                      <Text variant="headingSm" as="h2" fontWeight="regular">
+                        {loaderData?.shopData?.city},{" "}
+                        {loaderData?.shopData?.zip}
+                      </Text>
+                      <Text variant="headingSm" as="h2" fontWeight="regular">
+                        {loaderData?.shopData?.country_name}
+                      </Text>
+                      <Text variant="headingSm" as="h2" fontWeight="regular">
+                        {loaderData?.shopData?.email}
+                      </Text>
+                      <Text variant="headingSm" as="h2" fontWeight="regular">
+                        {loaderData?.shopData?.phone}
+                      </Text>
+                    </BlockStack>
+                  </div>
                 </div>
               </div>
             </BlockStack>

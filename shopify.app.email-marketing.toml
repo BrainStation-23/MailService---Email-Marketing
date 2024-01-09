@@ -2,7 +2,7 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://fresh-elvis-rid-css.trycloudflare.com"
+application_url = "https://glasses-cds-rank-anymore.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://fresh-elvis-rid-css.trycloudflare.com/auth/callback",
-  "https://fresh-elvis-rid-css.trycloudflare.com/auth/shopify/callback",
-  "https://fresh-elvis-rid-css.trycloudflare.com/api/auth/callback"
+  "https://glasses-cds-rank-anymore.trycloudflare.com/auth/callback",
+  "https://glasses-cds-rank-anymore.trycloudflare.com/auth/shopify/callback",
+  "https://glasses-cds-rank-anymore.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

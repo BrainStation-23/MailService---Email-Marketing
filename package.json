@@ -23,6 +23,8 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@prisma/client": "^4.13.0",
+    "@react-email/components": "^0.0.12",
+    "@react-email/render": "^0.0.10",
     "@remix-run/dev": "^2.0.0",
     "@remix-run/node": "^2.0.0",
     "@remix-run/react": "^2.0.0",
@@ -36,9 +38,11 @@
     "@tinymce/tinymce-react": "^4.3.2",
     "framer-motion": "^10.17.6",
     "isbot": "latest",
+    "nodemailer": "^6.9.8",
     "prisma": "^4.13.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-email": "^1.10.0"
   },
   "devDependencies": {
     "@remix-run/eslint-config": "^2.0.0",
