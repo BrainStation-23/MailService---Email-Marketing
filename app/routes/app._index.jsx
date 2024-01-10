@@ -77,106 +77,6 @@ export const loader = async ({ request }) => {
   });
 };
 
-// export const action = async ({ request }) => {
-//   const { admin } = await authenticate.admin(request);
-
-//   return null;
-// };
-// export const action = async ({ request }) => {
-//   const { admin, session } = await authenticate.admin(request);
-
-//   const data = {
-//     ...Object.fromEntries(await request.formData()),
-//   };
-//   console.log(data);
-//   let products;
-//   let error;
-
-//   // @ts-ignore
-
-//   let selectedProduct;
-//   let selectedProductImages = [];
-//   let imagesForProduct;
-//   const variablesObj = {
-//     query: data.query,
-//   };
-
-//   try {
-//     if (data.action === "selected") {
-//       console.log("selected");
-//       const selectedResources = data.selectedResources.split(",");
-//       selectedProduct = await admin.rest.resources.Product.all({
-//         session: session,
-//         ids: selectedResources.join(","),
-//       });
-//       selectedProductImages = await Promise.all(
-//         selectedResources.map(async (productId) => {
-//           imagesForProduct = await admin.rest.resources.Image.all({
-//             session: session,
-//             product_id: productId,
-//           });
-//           return imagesForProduct;
-//         })
-//       );
-
-//       console.log(selectedProductImages);
-//       console.log(selectedProduct);
-//     } else if (data.action === "next") {
-//       console.log("YES next it is ");
-//       // @ts-ignore
-//       products = await admin.graphql(QUERY_NEXT_ORDERS, {
-//         variables: {
-//           first: PER_PAGE_PRODUCT_TO_SHOW,
-//           after: data.after,
-//           ...variablesObj,
-//         },
-//       });
-//       console.log(products);
-//     } else if (data.action === "previous") {
-//       console.log("YES previous it is ");
-//       // @ts-ignore
-//       products = await admin.graphql(QUERY_PREVIOUS_ORDERS, {
-//         variables: {
-//           last: PER_PAGE_PRODUCT_TO_SHOW,
-//           before: data.before,
-//           ...variablesObj,
-//         },
-//       });
-//     } else if (data.action === "filter" || data.action === "sort") {
-//       // @ts-ignore
-//       products = await admin.graphql(QUERY_PRODUCT, {
-//         variables: {
-//           query: data.query,
-//           input: PER_PAGE_PRODUCT_TO_SHOW,
-//         },
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     return json({
-//       products: [],
-//       error: "Something went wrong. Please try again !",
-//     });
-//   }
-
-//   console.log(JSON.stringify(products));
-
-//   // @ts-ignore
-//   console.log(products);
-
-//   console.log("products == " + products);
-//   console.log(selectedProduct?.data);
-//   console.log(imagesForProduct?.data);
-//   console.log(JSON.stringify(selectedProductImages?.data));
-//   console.log(selectedProductImages?.data);
-//   console.log(selectedProductImages);
-//   return json({
-//     products: await products?.json(),
-//     selectedProduct: selectedProduct?.data,
-//     selectedProductImages: selectedProductImages?.data,
-//     error,
-//   });
-// };
 export const action = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
 
@@ -186,7 +86,7 @@ export const action = async ({ request }) => {
   console.log(data.destinationMail);
   console.log(data.shopData);
   console.log(data.selectedProduct);
-
+  console.log(data.productCaption);
   if (data.action == "sendmail") {
     sendMail(
       data.destinationMail,
@@ -198,7 +98,10 @@ export const action = async ({ request }) => {
       data.shopData,
       data.selectedProduct,
       data.selectedProductImages,
-      data.offetTextDesign
+      data.offetTextDesign,
+      data.subtextDesign,
+      data.footerDesign,
+      data.productCaption
     );
   }
 
@@ -216,7 +119,7 @@ export const action = async ({ request }) => {
   };
 
   try {
-    if (data.action === "selected") {
+    if (data.action === "selected" || data.action == "sendmail") {
       console.log("selected");
       const selectedResources = data.selectedResources.split(",");
       selectedProduct = await admin.rest.resources.Product.all({
@@ -312,19 +215,21 @@ export default function Index() {
   const [subject, setSubject] = useState(null);
   const [previewText, setPreviewText] = useState(null);
   const [offertext, setOffertext] = useState("UP TO 30% OFF");
+  const [productCaption, setProductCaption] = useState("Top Picks For You");
   const [subtext, setSubtext] = useState(
     "To kick off the New Year on a high note, we're thrilled to announce our Warehouse Liquidation Event"
   );
   const [destinationMail, setDestinationMail] = useState();
   // main text
   const [fontSize, setFontSize] = useState(60);
-  const [lineHeight, setLineHeight] = useState(110);
+  const [lineHeight, setLineHeight] = useState(100);
   const [sheetDiscount, setSheetDiscount] = useState(false);
+  const [sheetCaption, setSheetCaption] = useState(false);
   const [mailActive, setMailActve] = useState(false);
   // subtext
 
-  const [fontSizeSubtext, setFontSizeSubtext] = useState(15);
-  const [lineHeightSubtext, setLineHeightSubtext] = useState(125);
+  const [fontSizeSubtext, setFontSizeSubtext] = useState(13);
+  const [lineHeightSubtext, setLineHeightSubtext] = useState(110);
   const [sheetSubtext, setSheetSubtext] = useState(false);
   const [productModal, setProductModal] = useState(false);
 
@@ -369,6 +274,10 @@ export default function Index() {
     () => setSheetDiscount((sheetDiscount) => !sheetDiscount),
     []
   );
+  const toggleSheetActiveCaption = useCallback(
+    () => setSheetCaption((sheetCaption) => !sheetCaption),
+    []
+  );
   const toggleSheetActiveSubtext = useCallback(
     () => setSheetSubtext((sheetSubtext) => !sheetSubtext),
     []
@@ -379,6 +288,9 @@ export default function Index() {
 
   const handleClick = () => {
     setSheetDiscount(true);
+  };
+  const handelClcikCaption = () => {
+    setSheetCaption(true);
   };
   const handleClickSubtext = () => {
     setSheetSubtext(true);
@@ -397,14 +309,6 @@ export default function Index() {
     setMailActve(true);
   };
 
-  // const handleSendMail = () => {
-  //   const maildiv =
-  //     document.getElementsByClassName("email__marketing")[0].innerHTML;
-  //   console.log(maildiv);
-  //   sendMail(destinationMail, subject, previewText, maildiv);
-
-  //   console.log("send mail");
-  // };
 
   const shopData = {
     name: loaderData?.shopData?.name,
@@ -412,6 +316,7 @@ export default function Index() {
     zip: loaderData?.shopData?.zip,
     country_name: loaderData?.shopData?.country_name,
     email: loaderData?.shopData?.email,
+    myshopify_domain: loaderData?.shopData?.myshopify_domain,
   };
 
   const handleSendMail = () => {
@@ -434,6 +339,10 @@ export default function Index() {
           actionData?.selectedProductImages
         ),
         offetTextDesign: JSON.stringify(offetTextDesign),
+        subtextDesign: JSON.stringify(subtextDesign),
+        footerDesign: JSON.stringify(footerDesign),
+        productCaption,
+        selectedResources,
       },
       {
         method: "POST",
@@ -445,6 +354,9 @@ export default function Index() {
   };
 
   const handelOfferText = useCallback((newValue) => setOffertext(newValue));
+  const handelProductCaption = useCallback((newValue) =>
+    setProductCaption(newValue)
+  );
   const handelSubtext = useCallback((newValue) => setSubtext(newValue));
 
   const isLoading =
@@ -551,6 +463,8 @@ export default function Index() {
     return STATUS[order];
   };
   const handleSelectedProduct = () => {
+    setProductModal(false);
+    setLoading(true);
     submit(
       // @ts-ignore
       {
@@ -834,6 +748,32 @@ export default function Index() {
     ...offertextP,
   };
 
+  const subtextDesign = {
+    background: `rgba(${colorSubtext.hue}, ${colorSubtext.saturation * 100}, ${
+      colorSubtext.brightness * 100
+    }, ${colorSubtext.alpha})`,
+    margin: "auto",
+    // marginTop: "1rem",
+    height: `${lineHeightSubtext}px`,
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    textAlign: "center",
+    paddingTop: "2rem",
+    fontSize: `${fontSizeSubtext}px`,
+    lineHeight: "1.3",
+  };
+
+  const footerDesign = {
+    // display: "flex",
+    alignContent: "center",
+    textAlign: "center",
+    flexDirection: "column",
+    background: "black",
+    color: "white",
+    padding: "1rem",
+  };
+
   return (
     <Page>
       {/* <p>{selectedResources}</p> */}
@@ -912,13 +852,16 @@ export default function Index() {
                   </div>
                 </div>
                 <Divider borderColor="border" />
-                <div className="email__marketing">
+                <div
+                  className="email__marketing"
+                  style={{ border: "1px solid black", padding: "1rem" }}
+                >
                   <BlockStack gap="300">
                     {productModal && (
                       <Modal
                         open={productModal}
                         onClose={handleChangeProductModal}
-                        title="Reach more shoppers with Instagram product tags"
+                        title="Select products to attach an email"
                         primaryAction={{
                           content: "Save",
                           onAction: handleSelectedProduct,
@@ -948,24 +891,7 @@ export default function Index() {
                     </BlockStack>
                   </div>
 
-                  <div
-                    style={{
-                      background: `rgba(${colorSubtext.hue}, ${
-                        colorSubtext.saturation * 100
-                      }, ${colorSubtext.brightness * 100}, ${
-                        colorSubtext.alpha
-                      })`,
-                      margin: "auto",
-                      // marginTop: "1rem",
-                      height: `${lineHeightSubtext}px`,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      paddingTop: "2rem",
-                    }}
-                    onClick={handleClickSubtext}
-                  >
+                  <div style={subtextDesign} onClick={handleClickSubtext}>
                     <Tooltip active content="Click here to chenge the text">
                       <div>
                         <Text variant="headingLg" as="h5">
@@ -982,6 +908,26 @@ export default function Index() {
                       </div>
                     </Tooltip>
                   </div>
+                  <Tooltip active content="Click here to chenge the caption">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        marginTop: "2rem",
+                        marginBottm: "1rem",
+                        borderTop: "1px solid black",
+                        paddingTop: "2rem",
+                        cursor: "pointer",
+                      }}
+                      onClick={handelClcikCaption}
+                    >
+                      <Text variant="headingLg" as="h1">
+                        {productCaption}
+                      </Text>
+                    </div>
+                  </Tooltip>
 
                   <Tooltip active content="Click here to add the product">
                     {" "}
@@ -989,11 +935,16 @@ export default function Index() {
                       style={{
                         margin: "1rem 0 1rem 0",
                         cursor: "pointer",
+                        display: "flex",
+                        width: "550px",
+                        overflow: "auto",
+
+                        overflowY: "hidden",
                       }}
                       onClick={handleClickProduct}
                     >
                       {selectedResources.length == 0 ? (
-                        <div style={{ border: "1px solid black" }}>
+                        <div>
                           <img
                             alt=""
                             width="100%"
@@ -1005,11 +956,21 @@ export default function Index() {
                             src={productSimple}
                           />
                         </div>
+                      ) : loading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            alignContent: "center",
+                          }}
+                        >
+                          <Spinner size="large" accessibilityLabel="Loading" />
+                        </div>
                       ) : (
                         actionData?.selectedProduct?.map((data, index) => (
                           <div
                             style={{
-                              border: "1px solid black",
                               marginBottom: "1rem",
                               padding: "1rem",
                               gap: "2rem",
@@ -1062,6 +1023,35 @@ export default function Index() {
                                     {loaderData?.shopData?.currency}{" "}
                                     {data.variants[0]?.price}{" "}
                                   </h3>
+                                  {/* <h1>{data.handle}</h1> */}
+                                  {/* <button
+                                    url={`https://commerce-23.myshopify.com/products/${data.handle}`}
+                                  >
+                                    Shop now
+                                  </button> */}
+
+                                  <Text>
+                                    <a
+                                      href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{
+                                        display: "inline-block",
+                                        padding: "10px 20px",
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        textDecoration: "none",
+                                        textAlign: "center",
+                                        fontSize: "12px",
+                                        cursor: "pointer",
+                                        borderRadius: "5px",
+                                        border: "1px solid black",
+                                        marginTop: "5px",
+                                      }}
+                                    >
+                                      Shop Now
+                                    </a>
+                                  </Text>
                                 </div>
                               </InlineStack>
                             </InlineStack>
@@ -1071,34 +1061,18 @@ export default function Index() {
                     </div>
                   </Tooltip>
 
-                  <div
-                    className="footer"
-                    style={{
-                      // display: "flex",
-                      alignContent: "center",
-                      textAlign: "center",
-                      flexDirection: "column",
-                      background: "black",
-                      color: "white",
-                      padding: "1rem",
-                    }}
-                  >
+                  <div className="footer" style={footerDesign}>
                     <BlockStack gap={"200"}>
                       <Text variant="headingLg" as="h1">
                         {loaderData?.shopData?.name}
                       </Text>
                       <Text variant="headingSm" as="h2" fontWeight="regular">
-                        {loaderData?.shopData?.city},{" "}
-                        {loaderData?.shopData?.zip}
-                      </Text>
-                      <Text variant="headingSm" as="h2" fontWeight="regular">
-                        {loaderData?.shopData?.country_name}
-                      </Text>
-                      <Text variant="headingSm" as="h2" fontWeight="regular">
                         {loaderData?.shopData?.email}
                       </Text>
                       <Text variant="headingSm" as="h2" fontWeight="regular">
-                        {loaderData?.shopData?.phone}
+                        {loaderData?.shopData?.city},{"-"}{" "}
+                        {loaderData?.shopData?.zip}.
+                        {loaderData?.shopData?.country_name}
                       </Text>
                     </BlockStack>
                   </div>
@@ -1109,6 +1083,38 @@ export default function Index() {
         </Layout.Section>
         <Layout.Section variant="oneThird">
           <Card>
+            {sheetCaption && (
+              <div>
+                <Sheet
+                  open={sheetCaption}
+                  onClose={toggleSheetActiveCaption}
+                  accessibilityLabel="Caption "
+                >
+                  <div
+                    style={{ margin: "auto", marginTop: "2rem", width: "90%" }}
+                  >
+                    <TextField
+                      label=" Caption text"
+                      value={productCaption}
+                      onChange={handelProductCaption}
+                      autoComplete="off"
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      alignItems: "center",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "1rem",
+                      width: "100%",
+                    }}
+                  >
+                    <Button onClick={toggleSheetActive}>Cancel</Button>
+                  </div>
+                </Sheet>
+              </div>
+            )}
             {sheetDiscount && (
               <div>
                 <Sheet
@@ -1132,7 +1138,7 @@ export default function Index() {
                     <RangeSlider
                       output
                       label="Line height (px) "
-                      min={100}
+                      min={80}
                       max={200}
                       value={lineHeight}
                       onChange={handleRangeLineHEightChange}
@@ -1155,7 +1161,7 @@ export default function Index() {
                       output
                       label="Text size (px) "
                       min={20}
-                      max={70}
+                      max={50}
                       value={fontSize}
                       onChange={handleRangeFontSizeChange}
                       suffix={
@@ -1219,8 +1225,8 @@ export default function Index() {
                     <RangeSlider
                       output
                       label="Line height (px) "
-                      min={100}
-                      max={500}
+                      min={90}
+                      max={200}
                       value={lineHeightSubtext}
                       onChange={handleRangeLineHEightChangeSubtext}
                       suffix={
@@ -1241,8 +1247,8 @@ export default function Index() {
                     <RangeSlider
                       output
                       label="Text size (px) "
-                      min={12}
-                      max={25}
+                      min={8}
+                      max={20}
                       value={fontSizeSubtext}
                       onChange={handleRangeFontSizeChangeSubtext}
                       suffix={

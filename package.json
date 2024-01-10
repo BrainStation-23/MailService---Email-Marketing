@@ -42,7 +42,8 @@
     "prisma": "^4.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-email": "^1.10.0"
+    "react-email": "^1.10.0",
+    "react-modal": "^3.16.1"
   },
   "devDependencies": {
     "@remix-run/eslint-config": "^2.0.0",

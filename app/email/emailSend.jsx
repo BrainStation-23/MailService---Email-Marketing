@@ -1,5 +1,3 @@
-// import productSimple from "./images/productSimple.png";
-
 import {
   Body,
   Container,
@@ -14,6 +12,7 @@ import {
   Row,
   Section,
   Text,
+  Box,
 } from "@react-email/components";
 import * as React from "react";
 
@@ -28,6 +27,9 @@ export const NikeReceiptEmail = ({
   selectedProduct,
   selectedProductImages,
   offetTextDesign,
+  subtextDesign,
+  footerDesign,
+  productCaption,
 }) => (
   <Html>
     <Head />
@@ -35,120 +37,92 @@ export const NikeReceiptEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Section style={message}>
-          <Img
-            src={`${baseUrl}/static/nike-logo.png`}
-            width="66"
-            height="22"
-            alt="Nike"
-            style={{ margin: "auto" }}
-          />
+          {/* <Row style={footer.policy}>
+            <Text style={global.heading}>{shopData.name}</Text>
+          </Row> */}
+          <Row style={footer.policy}>
+            <a
+              href={`https://${shopData.myshopify_domain}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text style={global.heading}>{shopData.name}</Text>
+            </a>
+          </Row>
+
           <Heading style={offetTextDesign}>{offertext} </Heading>
-          <Text style={global.text}>{subtext} </Text>
+          <Text style={subtextDesign}>{subtext} </Text>
         </Section>
 
         <Hr style={global.hr} />
+
         <Section style={paddingY}>
-          <Text style={global.heading}>Top Picks For You</Text>
-
+          <Text style={global.heading}>{productCaption}</Text>
           <Row style={recomendations.container}>
-            {/* <Column
-              style={{ ...recomendations.product, paddingLeft: "4px" }}
-              align="center"
-            >
-              <Img
-                src={`${baseUrl}/static/nike-recomendation-1.png`}
-                alt="Brazil 2022/23 Stadium Away Women's Nike Dri-FIT Soccer Jersey"
-                width="100%"
-              />
-              <Text style={recomendations.title}>
-                USWNT 2022/23 Stadium Home
-              </Text>
-              <Text style={recomendations.text}>
-                Women's Nike Dri-FIT Soccer Jersey
-              </Text>
-            </Column>
-            <Column style={recomendations.product} align="center">
-              <Img
-                src={`${baseUrl}/static/nike-recomendation-2.png`}
-                alt="Brazil 2022/23 Stadium Away Women's Nike Dri-FIT Soccer Jersey"
-                width="100%"
-              />
-              <Text style={recomendations.title}>
-                Brazil 2022/23 Stadium Goalkeeper
-              </Text>
-              <Text style={recomendations.text}>
-                Men's Nike Dri-FIT Short-Sleeve Football Shirt
-              </Text>
-            </Column>
-            <Column style={recomendations.product} align="center">
-              <Img
-                src={`${baseUrl}/static/nike-recomendation-4.png`}
-                alt="Brazil 2022/23 Stadium Away Women's Nike Dri-FIT Soccer Jersey"
-                width="100%"
-              />
-              <Text style={recomendations.title}>FFF</Text>
-              <Text style={recomendations.text}>Women's Soccer Jacket</Text>
-            </Column>
-            <Column
-              style={{ ...recomendations.product, paddingRight: "4px" }}
-              align="center"
-            >
-              <Img
-                src={`${baseUrl}/static/nike-recomendation-4.png`}
-                alt="Brazil 2022/23 Stadium Away Women's Nike Dri-FIT Soccer Jersey"
-                width="100%"
-              />
-              <Text style={recomendations.title}>FFF</Text>
-              <Text style={recomendations.text}>
-                Women's Nike Pre-Match Football Top
-              </Text>
-            </Column>
-             */}
-
-            {selectedProduct.length == 0 ? (
-              <Column
-                style={{ ...recomendations.product, paddingLeft: "4px" }}
-                align="center"
-              >
-                <Img alt="" width="100%" height="100%" />
-              </Column>
-            ) : (
-              selectedProduct?.map((data, index) => {
-                const rowLEn = selectedProduct.length;
-                return (
-                  <Column
-                    key={index}
-                    style={{ ...recomendations.product, paddingLeft: "4px" }}
-                    align="center"
+            {Array.isArray(selectedProduct) &&
+              selectedProduct.map((data, index) => (
+                <Column
+                  key={index}
+                  style={{ ...recomendations.product, paddingLeft: "4px" }}
+                  align="center"
+                >
+                  {selectedProductImages
+                    .filter((imageData) => imageData.product_id === data.id)
+                    .map((filteredImageData, index) => (
+                      <Img
+                        alt=""
+                        width="180px"
+                        height="200px"
+                        style={{
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                        src={filteredImageData.src}
+                        key={index}
+                      />
+                    ))}
+                  <Text style={recomendations.title}>{data.title}</Text>
+                  <Text style={recomendations.title}>
+                    {data.variants[0]?.price}{" "}
+                  </Text>
+                  {/* <button
+                    onClick={() =>
+                      window.open(
+                        `https://${shopData.myshopify_domain}/products/${data.handle}`,
+                        "_blank"
+                      )
+                    }
                   >
-                    {selectedProductImages
-                      .filter((imageData) => imageData.product_id === data.id)
-                      .map((filteredImageData, index) => (
-                        <Img
-                          alt=""
-                          width="180px"
-                          height="200px"
-                          style={{
-                            objectFit: "cover",
-                            objectPosition: "center",
-                          }}
-                          src={filteredImageData.src}
-                          key={index}
-                        />
-                      ))}
-                    <Text style={recomendations.title}>{data.title}</Text>
-                    <Text style={recomendations.title}>
-                      {data.variants[0]?.price}{" "}
-                    </Text>
-                  </Column>
-                );
-              })
-            )}
+                    Shop Now
+                  </button> */}
+                  <Text>
+                    <a
+                      href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: "inline-block",
+                        padding: "10px 20px",
+                        backgroundColor: "white",
+                        color: "black",
+                        textDecoration: "none",
+                        textAlign: "center",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        borderRadius: "5px",
+                        border: "1px solid black",
+                        marginTop: "5px",
+                      }}
+                    >
+                      Shop Now
+                    </a>
+                  </Text>
+                </Column>
+              ))}
           </Row>
         </Section>
-
         <Hr style={{ ...global.hr, marginTop: "12px" }} />
-        <Section style={paddingY}>
+        <Section style={footerDesign}>
           <Row style={footer.policy}>
             <Text style={global.heading}>{shopData.name}</Text>
           </Row>
@@ -242,7 +216,7 @@ const track = {
 };
 
 const message = {
-  padding: "40px 74px",
+  padding: "10px 13px",
   textAlign: "center",
 };
 
@@ -262,7 +236,7 @@ const recomendationsText = {
 
 const recomendations = {
   container: {
-    padding: "20px 0",
+    padding: "5px 0",
     width: "465px",
     overflow: "auto",
   },
@@ -327,11 +301,16 @@ const footer = {
   policy: {
     width: "166px",
     margin: "auto",
+    cursore: "pointer",
   },
   text: {
     margin: "0",
-    color: "#AFAFAF",
+    color: "white",
     fontSize: "13px",
     textAlign: "center",
+  },
+  a: {
+    textDecoration: "none",
+    color: "white",
   },
 };
