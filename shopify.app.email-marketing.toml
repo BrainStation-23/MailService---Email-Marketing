@@ -2,7 +2,7 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://supporters-money-asked-pants.trycloudflare.com"
+application_url = "https://steps-epic-lesson-singapore.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://supporters-money-asked-pants.trycloudflare.com/auth/callback",
-  "https://supporters-money-asked-pants.trycloudflare.com/auth/shopify/callback",
-  "https://supporters-money-asked-pants.trycloudflare.com/api/auth/callback"
+  "https://steps-epic-lesson-singapore.trycloudflare.com/auth/callback",
+  "https://steps-epic-lesson-singapore.trycloudflare.com/auth/shopify/callback",
+  "https://steps-epic-lesson-singapore.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
