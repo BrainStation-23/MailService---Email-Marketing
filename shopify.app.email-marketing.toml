@@ -2,7 +2,7 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://inf-accurately-revised-vulnerability.trycloudflare.com"
+application_url = "https://indianapolis-roberts-covering-keeps.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://inf-accurately-revised-vulnerability.trycloudflare.com/auth/callback",
-  "https://inf-accurately-revised-vulnerability.trycloudflare.com/auth/shopify/callback",
-  "https://inf-accurately-revised-vulnerability.trycloudflare.com/api/auth/callback"
+  "https://indianapolis-roberts-covering-keeps.trycloudflare.com/auth/callback",
+  "https://indianapolis-roberts-covering-keeps.trycloudflare.com/auth/shopify/callback",
+  "https://indianapolis-roberts-covering-keeps.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

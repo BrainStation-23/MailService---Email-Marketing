@@ -24,6 +24,7 @@
     "@emotion/styled": "^11.11.0",
     "@prisma/client": "^4.13.0",
     "@react-email/components": "^0.0.12",
+    "@react-email/img": "0.0.7",
     "@react-email/render": "^0.0.10",
     "@remix-run/dev": "^2.0.0",
     "@remix-run/node": "^2.0.0",

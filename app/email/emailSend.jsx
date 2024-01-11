@@ -1,3 +1,5 @@
+// import productSimple from "./images/productSimple.png";
+import productSimple from "../routes/images/productSimple.png";
 import {
   Body,
   Container,
@@ -59,7 +61,7 @@ export const NikeReceiptEmail = ({
         <Section style={paddingY}>
           <Text style={global.heading}>{productCaption}</Text>
           <Row style={recomendations.container}>
-            {Array.isArray(selectedProduct) &&
+            {Array.isArray(selectedProduct) ? (
               selectedProduct.map((data, index) => (
                 <Column
                   key={index}
@@ -85,16 +87,7 @@ export const NikeReceiptEmail = ({
                   <Text style={recomendations.title}>
                     {data.variants[0]?.price}{" "}
                   </Text>
-                  {/* <button
-                    onClick={() =>
-                      window.open(
-                        `https://${shopData.myshopify_domain}/products/${data.handle}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    Shop Now
-                  </button> */}
+
                   <Text>
                     <a
                       href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
@@ -118,7 +111,19 @@ export const NikeReceiptEmail = ({
                     </a>
                   </Text>
                 </Column>
-              ))}
+              ))
+            ) : (
+              <Img
+                alt=""
+                width="180px"
+                height="200px"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+                src={productSimple}
+              />
+            )}
           </Row>
         </Section>
         <Hr style={{ ...global.hr, marginTop: "12px" }} />
