@@ -221,7 +221,7 @@ export default function Index() {
   );
   const [destinationMail, setDestinationMail] = useState();
   // main text
-  const [fontSize, setFontSize] = useState(60);
+  const [fontSize, setFontSize] = useState(35);
   const [lineHeight, setLineHeight] = useState(100);
   const [sheetDiscount, setSheetDiscount] = useState(false);
   const [sheetCaption, setSheetCaption] = useState(false);
@@ -308,7 +308,6 @@ export default function Index() {
   const openSendMail = () => {
     setMailActve(true);
   };
-
 
   const shopData = {
     name: loaderData?.shopData?.name,
@@ -1161,7 +1160,7 @@ export default function Index() {
                       output
                       label="Text size (px) "
                       min={20}
-                      max={50}
+                      max={40}
                       value={fontSize}
                       onChange={handleRangeFontSizeChange}
                       suffix={
