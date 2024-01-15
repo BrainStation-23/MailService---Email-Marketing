@@ -257,6 +257,14 @@ export default function OrderDetailPage() {
                       <Text>Address</Text>
                     </div>
                     <div style={{ marginBottom: "5px" }}>
+                      {" "}
+                      <Text as="h2" variant="headingSm" fontWeight="regular">
+                        {loaderData?.order?.email
+                          ? loaderData?.order?.email
+                          : "---"}
+                      </Text>
+                    </div>
+                    <div style={{ marginBottom: "5px" }}>
                       <Text as="h2" variant="headingSm" fontWeight="regular">
                         {loaderData?.order?.customer?.default_address?.address1
                           ? loaderData?.order?.customer?.default_address
@@ -348,32 +356,6 @@ export default function OrderDetailPage() {
                     Total: {loaderData?.order.total_price}
                   </Text>
                 </div>
-                {/* <div style={{ marginTop: "1rem" }}>
-                  <div style={{ textAlign: "center", marginBottom: "5px" }}>
-                    <a
-                      href={`https://${loaderData?.shopInfo?.myshopify_domain}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Text variant="heading2xl" as="h1">
-                        {loaderData?.shopInfo?.name}
-                      </Text>
-                    </a>
-                  </div>
-                  <div
-                    style={{
-                      textAlign: "center",
-                      width: "80%",
-                      margin: "auto",
-                    }}
-                  >
-                    <Text variant="headingSm" as="h5">
-                      {loaderData?.shopInfo?.email} {"•  "}
-                      {loaderData?.shopInfo?.city} {"-"}
-                      {loaderData?.shopInfo?.country_name}
-                    </Text>
-                  </div>
-                </div> */}
               </BlockStack>
             </Card>
           </div>

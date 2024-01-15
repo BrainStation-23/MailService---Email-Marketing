@@ -33,7 +33,6 @@ export const sendMail = async (
   subtextDesign,
   footerDesign,
   productCaption
-  
 ) => {
   console.log(sendMailTo);
   console.log(html);
@@ -53,18 +52,17 @@ export const sendMail = async (
     }
   };
   mailOptions.html = render(
-    // <NikeReceiptEmail
-    //   offertext={offertext}
-    //   subtext={subtext}
-    //   shopData={parseOrDefault(shopdata)}
-    //   selectedProduct={parseOrDefault(selectedProduct)}
-    //   selectedProductImages={parseOrDefault(selectedProductImages)}
-    //   offetTextDesign={parseOrDefault(offetTextDesign)}
-    //   subtextDesign={parseOrDefault(subtextDesign)}
-    //   footerDesign={parseOrDefault(footerDesign)}
-    //   productCaption={productCaption}
-    // />
-    <PlaidVerifyIdentityEmail />
+    <NikeReceiptEmail
+      offertext={offertext}
+      subtext={subtext}
+      shopData={parseOrDefault(shopdata)}
+      selectedProduct={parseOrDefault(selectedProduct)}
+      selectedProductImages={parseOrDefault(selectedProductImages)}
+      offetTextDesign={parseOrDefault(offetTextDesign)}
+      subtextDesign={parseOrDefault(subtextDesign)}
+      footerDesign={parseOrDefault(footerDesign)}
+      productCaption={productCaption}
+    />
   );
 
   try {
