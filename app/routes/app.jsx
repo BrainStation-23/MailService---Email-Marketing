@@ -24,6 +24,7 @@ export default function App() {
         </Link>
         <Link to="/app/additional">Additional page</Link>
         <Link to="/app/templete">Email Templete </Link>
+        <Link to="/app/orders">Order page </Link>
       </ui-nav-menu>
       <Outlet />
     </AppProvider>

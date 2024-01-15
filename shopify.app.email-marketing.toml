@@ -2,18 +2,18 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://steps-epic-lesson-singapore.trycloudflare.com"
+application_url = "https://belong-heath-medieval-irrigation.trycloudflare.com"
 embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_products,write_products,read_customers,read_orders,write_orders,read_all_orders"
 
 [auth]
 redirect_urls = [
-  "https://steps-epic-lesson-singapore.trycloudflare.com/auth/callback",
-  "https://steps-epic-lesson-singapore.trycloudflare.com/auth/shopify/callback",
-  "https://steps-epic-lesson-singapore.trycloudflare.com/api/auth/callback"
+  "https://belong-heath-medieval-irrigation.trycloudflare.com/auth/callback",
+  "https://belong-heath-medieval-irrigation.trycloudflare.com/auth/shopify/callback",
+  "https://belong-heath-medieval-irrigation.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

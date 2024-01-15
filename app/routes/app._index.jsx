@@ -42,9 +42,9 @@ import { authenticate } from "../shopify.server";
 import productSimple from "./images/productSimple.png";
 
 import {
-  QUERY_NEXT_ORDERS,
+  QUERY_NEXT_PRODUCT,
   QUERY_PRODUCT,
-  QUERY_PREVIOUS_ORDERS,
+  QUERY_PREVIOUS_PRODUCT,
 } from "utils/queries";
 const PER_PAGE_PRODUCT_TO_SHOW = 10;
 
@@ -141,7 +141,7 @@ export const action = async ({ request }) => {
     } else if (data.action === "next") {
       console.log("YES next it is ");
       // @ts-ignore
-      products = await admin.graphql(QUERY_NEXT_ORDERS, {
+      products = await admin.graphql(QUERY_NEXT_PRODUCT, {
         variables: {
           first: PER_PAGE_PRODUCT_TO_SHOW,
           after: data.after,
@@ -152,7 +152,7 @@ export const action = async ({ request }) => {
     } else if (data.action === "previous") {
       console.log("YES previous it is ");
       // @ts-ignore
-      products = await admin.graphql(QUERY_PREVIOUS_ORDERS, {
+      products = await admin.graphql(QUERY_PREVIOUS_PRODUCT, {
         variables: {
           last: PER_PAGE_PRODUCT_TO_SHOW,
           before: data.before,
