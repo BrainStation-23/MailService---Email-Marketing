@@ -1,6 +1,5 @@
 import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
-import { NikeReceiptEmail } from "./email/emailSend";
 import { PlaidVerifyIdentityEmail } from "./email/discountCode";
 
 const transporter = nodemailer.createTransport({
@@ -24,21 +23,15 @@ export const sendMail = async (
   subject,
   message,
   html,
-  offertext,
-  subtext,
-  shopdata,
-  selectedProduct,
-  selectedProductImages,
-  offetTextDesign,
-  subtextDesign,
-  footerDesign,
-  productCaption
+  caption,
+  text,
+  code,
+  shopdata
 ) => {
   console.log(sendMailTo);
-  console.log(html);
   console.log(shopdata);
-  console.log(offertext);
-  console.log(subtext);
+  console.log(caption);
+  console.log(text);
 
   mailOptions.to = sendMailTo;
   mailOptions.subject = subject;
@@ -52,16 +45,11 @@ export const sendMail = async (
     }
   };
   mailOptions.html = render(
-    <NikeReceiptEmail
-      offertext={offertext}
-      subtext={subtext}
+    <PlaidVerifyIdentityEmail
+      caption={caption}
+      text={text}
+      code={code}
       shopData={parseOrDefault(shopdata)}
-      selectedProduct={parseOrDefault(selectedProduct)}
-      selectedProductImages={parseOrDefault(selectedProductImages)}
-      offetTextDesign={parseOrDefault(offetTextDesign)}
-      subtextDesign={parseOrDefault(subtextDesign)}
-      footerDesign={parseOrDefault(footerDesign)}
-      productCaption={productCaption}
     />
   );
 

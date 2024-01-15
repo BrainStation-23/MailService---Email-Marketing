@@ -2,18 +2,18 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://supporters-money-asked-pants.trycloudflare.com"
+application_url = "https://apparatus-scale-downloadable-manufacture.trycloudflare.com"
 embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_products,write_products,read_customers,read_orders,write_orders,read_all_orders"
 
 [auth]
 redirect_urls = [
-  "https://supporters-money-asked-pants.trycloudflare.com/auth/callback",
-  "https://supporters-money-asked-pants.trycloudflare.com/auth/shopify/callback",
-  "https://supporters-money-asked-pants.trycloudflare.com/api/auth/callback"
+  "https://apparatus-scale-downloadable-manufacture.trycloudflare.com/auth/callback",
+  "https://apparatus-scale-downloadable-manufacture.trycloudflare.com/auth/shopify/callback",
+  "https://apparatus-scale-downloadable-manufacture.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
