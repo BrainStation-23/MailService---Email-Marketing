@@ -17,7 +17,14 @@ import * as React from "react";
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
-
+function formatDate(dateString) {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  const formattedDate = new Date(dateString).toLocaleDateString(
+    "en-US",
+    options
+  );
+  return formattedDate;
+}
 export const AppleReceiptEmail = ({ order, shopData }) => (
   <Html>
     <Head />
@@ -27,7 +34,15 @@ export const AppleReceiptEmail = ({ order, shopData }) => (
       <Container style={container}>
         <Section>
           <Column>
-            <Text style={heading}>{shopData.name}</Text>
+            <a
+              href={`https://${shopData?.myshopify_domain}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={headingName}
+            >
+              <Text style={headingName}>{shopData?.name}</Text>
+            </a>
+            {/* <Text style={headingName}>{shopData.name}</Text> */}
           </Column>
 
           <Column align="right" style={tableCell}>
@@ -46,95 +61,78 @@ export const AppleReceiptEmail = ({ order, shopData }) => (
             <Column colSpan={2}>
               <Row>
                 <Column style={informationTableColumn}>
-                  <Text style={informationTableLabel}>APPLE ID</Text>
-                  <Link
-                    style={{
-                      ...informationTableValue,
-                      color: "#15c",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    zeno.rocha@gmail.com
-                  </Link>
+                  <Text style={informationTableLabel}>Order No</Text>
+                  <Text style={informationTableLabel}>{order.name}</Text>
                 </Column>
               </Row>
 
               <Row>
                 <Column style={informationTableColumn}>
-                  <Text style={informationTableLabel}>INVOICE DATE</Text>
-                  <Text style={informationTableValue}>18 Jan 2023</Text>
+                  <Text style={informationTableLabel}>Order placed</Text>
+                  <Text style={informationTableValue}>
+                    {" "}
+                    {formatDate(order.created_at)}
+                  </Text>
                 </Column>
               </Row>
 
               <Row>
                 <Column style={informationTableColumn}>
-                  <Text style={informationTableLabel}>ORDER ID</Text>
-                  <Link
-                    style={{
-                      ...informationTableValue,
-                      color: "#15c",
-                      textDecoration: "underline",
-                    }}
-                  >
-                    ML4F5L8522
-                  </Link>
-                </Column>
-                <Column style={informationTableColumn}>
-                  <Text style={informationTableLabel}>DOCUMENT NO.</Text>
-                  <Text style={informationTableValue}>186623754793</Text>
+                  <Text style={informationTableLabel}>Order Id</Text>
+                  <Text style={informationTableLabel}>{order.id}</Text>
                 </Column>
               </Row>
             </Column>
             <Column style={informationTableColumn} colSpan={2}>
-              <Text style={informationTableLabel}>BILLED TO</Text>
+              <Text style={informationTableLabel}>Address</Text>
               <Text style={informationTableValue}>
-                Visa .... 7461 (Apple Pay)
+                {order?.customer?.default_address?.address1
+                  ? order?.customer?.default_address?.address1
+                  : "---"}{" "}
               </Text>
-              <Text style={informationTableValue}>Zeno Rocha</Text>
-              <Text style={informationTableValue}>2125 Chestnut St</Text>
-              <Text style={informationTableValue}>San Francisco, CA 94123</Text>
-              <Text style={informationTableValue}>USA</Text>
+              <Text style={informationTableValue}>
+                {order?.customer?.default_address?.zip
+                  ? order?.customer?.default_address?.zip
+                  : "---"}
+                -
+                {order?.customer?.default_address?.city
+                  ? order?.customer?.default_address?.city
+                  : "---"}
+              </Text>
+              <Text style={informationTableValue}>
+                {order?.customer?.default_address?.country_name
+                  ? order?.customer?.default_address?.country_name
+                  : "---"}{" "}
+              </Text>
             </Column>
           </Row>
         </Section>
         <Section style={productTitleTable}>
-          <Text style={productsTitle}>App Store</Text>
+          <Text style={productsTitle}>Order Item</Text>
         </Section>
-        <Section>
-          <Column style={{ width: "64px" }}>
-            <Img
-              src={`${baseUrl}/static/apple-hbo-max-icon.jpeg`}
-              width="64"
-              height="64"
-              alt="HBO Max"
-              style={productIcon}
-            />
-          </Column>
-          <Column style={{ paddingLeft: "22px" }}>
-            <Text style={productTitle}>HBO Max: Stream TV &amp; Movies</Text>
-            <Text style={productDescription}>HBO Max Ad-Free (Monthly)</Text>
-            <Text style={productDescription}>Renews Aug 20, 2023</Text>
-            <Link
-              href="https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?cc=us&amp;id=1497977514&amp;o=i&amp;type=Subscription%20Renewal"
-              style={productLink}
-              data-saferedirecturl="https://www.google.com/url?q=https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?cc%3Dus%26id%3D1497977514%26o%3Di%26type%3DSubscription%2520Renewal&amp;source=gmail&amp;ust=1673963081204000&amp;usg=AOvVaw2DFCLKMo1snS-Swk5H26Z1"
-            >
-              Write a Review
-            </Link>
-            <span style={divisor}>|</span>
-            <Link
-              href="https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/reportAProblem?a=1497977514&amp;cc=us&amp;d=683263808&amp;o=i&amp;p=29065684906671&amp;pli=29092219632071&amp;s=1"
-              style={productLink}
-              data-saferedirecturl="https://www.google.com/url?q=https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/reportAProblem?a%3D1497977514%26cc%3Dus%26d%3D683263808%26o%3Di%26p%3D29065684906671%26pli%3D29092219632071%26s%3D1&amp;source=gmail&amp;ust=1673963081204000&amp;usg=AOvVaw3y47L06B2LTrL6qsmaW2Hq"
-            >
-              Report a Problem
-            </Link>
-          </Column>
+        {order?.line_items.map((item, index) => (
+          <Section
+            key={index}
+            style={{ borderBottom: "1px solid  #b7b2b2", padding: "10px 0" }}
+          >
+            <React.Fragment>
+              <Column style={{ paddingLeft: "22px" }}>
+                <Text style={productTitle}>{item.title}</Text>
+                <Text style={productDescription}>
+                  Price: {item.price} {item.price_set.shop_money.currency_code}{" "}
+                </Text>
+                <Text style={productDescription}>x{item.quantity} </Text>
+              </Column>
 
-          <Column style={productPriceWrapper} align="right">
-            <Text style={productPrice}>$14.99</Text>
-          </Column>
-        </Section>
+              <Column style={productPriceWrapper} align="right">
+                <Text style={productPrice}>
+                  {item.price_set.shop_money.currency_code}{" "}
+                  {item.price * item.quantity}
+                </Text>
+              </Column>
+            </React.Fragment>
+          </Section>
+        ))}
         <Hr style={productPriceLine} />
         <Section align="right">
           <Column style={tableCell} align="right">
@@ -142,39 +140,10 @@ export const AppleReceiptEmail = ({ order, shopData }) => (
           </Column>
           <Column style={productPriceVerticalLine}></Column>
           <Column style={productPriceLargeWrapper}>
-            <Text style={productPriceLarge}>$14.99</Text>
+            <Text style={productPriceLarge}> {order.total_price}</Text>
           </Column>
         </Section>
         <Hr style={productPriceLineBottom} />
-
-        <Hr style={walletBottomLine} />
-        <Section>
-          <Column align="center" style={footerIcon}>
-            <Img
-              src={`${baseUrl}/static/apple-logo.png`}
-              width="26"
-              height="26"
-              alt="Apple Card"
-            />
-          </Column>
-        </Section>
-        <Text style={footerLinksWrapper}>
-          <Link href="https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/accountSummary?mt=8">
-            Account Settings
-          </Link>{" "}
-          •{" "}
-          <Link href="https://www.apple.com/legal/itunes/us/sales.html">
-            Terms of Sale
-          </Link>{" "}
-          •{" "}
-          <Link href="https://www.apple.com/legal/privacy/">
-            Privacy Policy{" "}
-          </Link>
-        </Text>
-        <Text style={footerCopyright}>
-          Copyright © 2023 Apple Inc. <br />{" "}
-          <Link href="https://www.apple.com/legal/">All rights reserved</Link>
-        </Text>
       </Container>
     </Body>
   </Html>
@@ -206,17 +175,16 @@ const heading = {
   fontWeight: "300",
   color: "#888888",
 };
-
+const headingName = {
+  fontSize: "32px",
+  fontWeight: "300",
+};
 const cupomText = {
   textAlign: "center",
   margin: "36px 0 40px 0",
   fontSize: "14px",
   fontWeight: "500",
   color: "#111111",
-};
-
-const supStyle = {
-  fontWeight: "300",
 };
 
 const informationTable = {
@@ -267,31 +235,12 @@ const productsTitle = {
   margin: "0",
 };
 
-const productIcon = {
-  margin: "0 0 0 20px",
-  borderRadius: "14px",
-  border: "1px solid rgba(128,128,128,0.2)",
-};
-
 const productTitle = { fontSize: "12px", fontWeight: "600", ...resetText };
 
 const productDescription = {
   fontSize: "12px",
   color: "rgb(102,102,102)",
   ...resetText,
-};
-
-const productLink = {
-  fontSize: "12px",
-  color: "rgb(0,112,201)",
-  textDecoration: "none",
-};
-
-const divisor = {
-  marginLeft: "4px",
-  marginRight: "4px",
-  color: "rgb(51,51,51)",
-  fontWeight: 200,
 };
 
 const productPriceTotal = {
@@ -336,63 +285,13 @@ const productPriceLargeWrapper = { display: "table-cell", width: "90px" };
 
 const productPriceLineBottom = { margin: "0 0 75px 0" };
 
-const block = { display: "block" };
-
-const ctaTitle = {
-  display: "block",
-  margin: "15px 0 0 0",
-};
-
-const ctaText = { fontSize: "24px", fontWeight: "500" };
-
-const walletWrapper = { display: "table-cell", margin: "10px 0 0 0" };
-
-const walletLink = { color: "rgb(0,126,255)", textDecoration: "none" };
-
-const walletImage = {
-  display: "inherit",
-  paddingRight: "8px",
-  verticalAlign: "middle",
-};
-
 const walletBottomLine = { margin: "65px 0 20px 0" };
 
-const footerText = {
-  fontSize: "12px",
-  color: "rgb(102,102,102)",
-  margin: "0",
-  lineHeight: "auto",
-  marginBottom: "16px",
-};
-
-const footerTextCenter = {
-  fontSize: "12px",
-  color: "rgb(102,102,102)",
-  margin: "20px 0",
-  lineHeight: "auto",
-  textAlign: "center",
-};
-
-const footerLink = { color: "rgb(0,115,255)" };
-
-const footerIcon = { display: "block", margin: "40px 0 0 0" };
+const footerIcon = { display: "block", margin: "40px 0 0 0", fontSize: "32px" };
 
 const footerLinksWrapper = {
-  margin: "8px 0 0 0",
   textAlign: "center",
   fontSize: "12px",
-  color: "rgb(102,102,102)",
-};
-
-const footerCopyright = {
-  margin: "25px 0 0 0",
-  textAlign: "center",
-  fontSize: "12px",
-  color: "rgb(102,102,102)",
-};
-
-const walletLinkText = {
-  fontSize: "14px",
-  fontWeight: "400",
-  textDecoration: "none",
+  justifuContent: "center",
+  display: "flex",
 };

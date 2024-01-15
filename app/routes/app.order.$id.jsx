@@ -348,7 +348,7 @@ export default function OrderDetailPage() {
                     Total: {loaderData?.order.total_price}
                   </Text>
                 </div>
-                <div style={{ marginTop: "1rem" }}>
+                {/* <div style={{ marginTop: "1rem" }}>
                   <div style={{ textAlign: "center", marginBottom: "5px" }}>
                     <a
                       href={`https://${loaderData?.shopInfo?.myshopify_domain}`}
@@ -373,7 +373,7 @@ export default function OrderDetailPage() {
                       {loaderData?.shopInfo?.country_name}
                     </Text>
                   </div>
-                </div>
+                </div> */}
               </BlockStack>
             </Card>
           </div>
