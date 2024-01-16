@@ -118,14 +118,14 @@ export default function AdditionalPage() {
 
   return (
     <Page>
-      <ui-title-bar title="Additional page" />
+      <ui-title-bar title="Templete page" />
       <div style={{ marginBottom: "2rem" }}>
         <Banner title="Templete">
           <p>Select Your templete to send an mail.</p>
         </Banner>
       </div>
 
-      <InlineGrid gap="400" columns={2}>
+      <InlineGrid gap="400" >
         <BlockStack>
           <div style={{ position: "relative" }}>
             <img
@@ -156,195 +156,198 @@ export default function AdditionalPage() {
                 Select this{" "}
               </Button>
             </div>
+
+
+
           </div>
         </BlockStack>
 
         <Card height="320px" />
       </InlineGrid>
-      <Modal
-        open={modal}
-        onClose={handleCloseModal}
-        title="Attach your content and send an email"
-        primaryAction={{
-          content: "Send mail",
-          onAction: handelSendMailCode,
-        }}
-      >
-        <div
-          style={{
-            marginBottom: "1rem",
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "space-around",
+        <Modal
+          open={modal}
+          onClose={handleCloseModal}
+          title="Attach your content and send an email"
+          primaryAction={{
+            content: "Send mail",
+            onAction: handelSendMailCode,
           }}
         >
-          <div>
+          <div
+            style={{
+              marginBottom: "1rem",
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "space-around",
+            }}
+          >
+            <div>
+              <TextField
+                label="Subject"
+                value={subject}
+                onChange={handleChangeSubject}
+                autoComplete="off"
+                placeholder="Subject"
+              />
+            </div>
+            <div>
+              <TextField
+                label="Preview Text"
+                value={previewText}
+                onChange={handleChangePreviewText}
+                multiline={4}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+          <div style={{ width: "70%", margin: "auto", marginBottom: "1rem" }}>
             <TextField
-              label="Subject"
-              value={subject}
-              onChange={handleChangeSubject}
+              label="Destination Email"
+              placeholder="Enter youtr main "
+              value={destinationMail}
+              onChange={handleMail}
               autoComplete="off"
-              placeholder="Subject"
             />
           </div>
-          <div>
-            <TextField
-              label="Preview Text"
-              value={previewText}
-              onChange={handleChangePreviewText}
-              multiline={4}
-              autoComplete="off"
-            />
-          </div>
-        </div>
-        <div style={{ width: "70%", margin: "auto", marginBottom: "1rem" }}>
-          <TextField
-            label="Destination Email"
-            placeholder="Enter youtr main "
-            value={destinationMail}
-            onChange={handleMail}
-            autoComplete="off"
-          />
-        </div>
 
-        <Divider borderColor="border-inverse" />
+          <Divider borderColor="border-inverse" />
 
-        <div
-          style={{
-            display: "flex",
-            gap: "2rem",
-            marginTop: "1rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <div style={{ marginLeft: "1rem" }}>
-            <Card>
-              <div
-                style={{
-                  display: "flex",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  marginBottom: "1rem",
-                }}
-              >
-                {/* <Text variant="heading2xl" as="h1">
-                  {loaderData?.shopData?.name}
-                </Text> */}
-                <a
-                  href={`https://${loaderData?.shopData?.myshopify_domain}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+          <div
+            style={{
+              display: "flex",
+              gap: "2rem",
+              marginTop: "1rem",
+              marginBottom: "1rem",
+            }}
+          >
+            <div style={{ marginLeft: "1rem" }}>
+              <Card>
+                <div
+                  style={{
+                    display: "flex",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    marginBottom: "1rem",
+                  }}
                 >
-                  <Text variant="heading2xl" as="h1">
+                  {/* <Text variant="heading2xl" as="h1">
                     {loaderData?.shopData?.name}
+                  </Text> */}
+                  <a
+                    href={`https://${loaderData?.shopData?.myshopify_domain}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Text variant="heading2xl" as="h1">
+                      {loaderData?.shopData?.name}
+                    </Text>
+                  </a>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    marginBottom: "1rem",
+                    color: "#50a3fc",
+                  }}
+                >
+                  <Text variant="headingMd" as="h4">
+                    {caption}
                   </Text>
-                </a>
-              </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  <Text variant="headingLg" as="h3">
+                    {text}
+                  </Text>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    marginBottom: "1rem",
+                    background: "#f2f2f2",
+                    width: "250px",
+                    height: "50px",
+                    margin: "auto",
+                    alignItems: "center",
+                    borderRadius: "3px",
+                  }}
+                >
+                  <Text variant="headingSm" as="h3">
+                    {code}
+                  </Text>
+                </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  marginBottom: "1rem",
-                  color: "#50a3fc",
-                }}
-              >
-                <Text variant="headingMd" as="h4">
-                  {caption}
-                </Text>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  marginBottom: "1rem",
-                }}
-              >
-                <Text variant="headingLg" as="h3">
-                  {text}
-                </Text>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  marginBottom: "1rem",
-                  background: "#f2f2f2",
-                  width: "250px",
-                  height: "50px",
-                  margin: "auto",
-                  alignItems: "center",
-                  borderRadius: "3px",
-                }}
-              >
-                <Text variant="headingSm" as="h3">
-                  {code}
-                </Text>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  marginBottom: "1rem",
-                  marginTop: "1rem",
-                }}
-              >
-                <Text variant="headingMd" as="h5" fontWeight="regular">
-                  Contact{" "}
-                  <u style={{ fontWeight: "600", cursor: "pointer" }}>
-                    {loaderData?.shopData?.name}{" "}
-                  </u>
-                  if you did not access this code.
-                </Text>
-              </div>
-              <Divider borderColor="border-inverse" />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  textAlign: "center",
-                  textTransform: "uppercase",
-                  marginTop: "1rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <Text>SECURELY POWERED BY {loaderData?.shopData?.name}</Text>
-              </div>
-            </Card>
-          </div>
-          <div style={{ padding: "1rem" }}>
-            <div style={{ marginBottom: "1rem" }}>
-              <TextField
-                label="Caption"
-                value={caption}
-                onChange={handleCaption}
-                autoComplete="off"
-              />
+                <div
+                  style={{
+                    display: "flex",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    marginBottom: "1rem",
+                    marginTop: "1rem",
+                  }}
+                >
+                  <Text variant="headingMd" as="h5" fontWeight="regular">
+                    Contact{" "}
+                    <u style={{ fontWeight: "600", cursor: "pointer" }}>
+                      {loaderData?.shopData?.name}{" "}
+                    </u>
+                    if you did not access this code.
+                  </Text>
+                </div>
+                <Divider borderColor="border-inverse" />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    textTransform: "uppercase",
+                    marginTop: "1rem",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  <Text>SECURELY POWERED BY {loaderData?.shopData?.name}</Text>
+                </div>
+              </Card>
             </div>
-            <div style={{ marginBottom: "1rem" }}>
-              <TextField
-                label="Text"
-                value={text}
-                onChange={handleText}
-                autoComplete="off"
-              />
-            </div>
-            <div style={{ marginBottom: "1rem" }}>
-              <TextField
-                label="Discound code"
-                value={code}
-                onChange={handleCode}
-                autoComplete="off"
-              />
+            <div style={{ padding: "1rem" }}>
+              <div style={{ marginBottom: "1rem" }}>
+                <TextField
+                  label="Caption"
+                  value={caption}
+                  onChange={handleCaption}
+                  autoComplete="off"
+                />
+              </div>
+              <div style={{ marginBottom: "1rem" }}>
+                <TextField
+                  label="Text"
+                  value={text}
+                  onChange={handleText}
+                  autoComplete="off"
+                />
+              </div>
+              <div style={{ marginBottom: "1rem" }}>
+                <TextField
+                  label="Discound code"
+                  value={code}
+                  onChange={handleCode}
+                  autoComplete="off"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
     </Page>
   );
 }

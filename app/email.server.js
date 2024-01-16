@@ -32,14 +32,15 @@ export const sendMail = async (
   offetTextDesign,
   subtextDesign,
   footerDesign,
-  productCaption
+  productCaption,
+  enabledProduct
 ) => {
   console.log(sendMailTo);
   console.log(html);
   console.log(shopdata);
   console.log(offertext);
   console.log(subtext);
-
+  console.log(enabledProduct);
   mailOptions.to = sendMailTo;
   mailOptions.subject = subject;
   mailOptions.text = message;
@@ -62,6 +63,7 @@ export const sendMail = async (
       subtextDesign={parseOrDefault(subtextDesign)}
       footerDesign={parseOrDefault(footerDesign)}
       productCaption={productCaption}
+      enabledProduct={enabledProduct}
     />
   );
 

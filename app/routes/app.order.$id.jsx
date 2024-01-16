@@ -31,6 +31,7 @@ import {
   Text,
   Layout,
   Icon,
+  Banner,
 } from "@shopify/polaris";
 
 import { authenticate } from "~/shopify.server";
@@ -88,17 +89,6 @@ export const action = async ({ request }) => {
   const city = OrderData.customer.default_address.city;
   const zip = OrderData.customer.default_address.zip;
   const LineItem = OrderData.fulfillments;
-
-  console.log(id);
-  console.log(email);
-  console.log(orderName);
-  console.log(orderDate);
-  console.log(discount);
-  console.log(money);
-  console.log(address);
-  console.log(city);
-  console.log(zip);
-  console.log(LineItem);
 
   sendMailOrder(email, data.order, data.shopData);
   console.log(JSON.parse(data.order));
@@ -183,6 +173,16 @@ export default function OrderDetailPage() {
 
       <Layout>
         <Layout.Section>
+          <div style={{ width: "70%", margin: "auto", marginBottom: "1rem" }}>
+            <Banner
+              title={`This receipt is sent to ${loaderData?.order?.email}`}
+              tone="info"
+            >
+              {/* <p>Subject : Your Order Information</p>
+              <p>From : email.marketing.bs23@gmail.com</p>
+              <p>To : {loaderData?.order?.email}</p> */}
+            </Banner>
+          </div>
           <div style={{ margin: "auto", width: "70%" }}>
             <Card>
               <BlockStack gap="300">

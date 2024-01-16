@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 const mailOptions = {
   from: "email.marketing.bs23@gmail.com",
   to: "bsse1111@iit.du.ac.bd",
-  subject: "Your Order Info",
+  subject: "Your Order Information",
   text: "Test mail from remix server",
   html: "fdas",
 };
