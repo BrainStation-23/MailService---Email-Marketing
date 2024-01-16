@@ -85,7 +85,7 @@ export const action = async ({ request }) => {
   const data = {
     ...Object.fromEntries(await request.formData()),
   };
-  
+
   if (data.action == "sendmail") {
     sendMail(
       data.destinationMail,
@@ -376,7 +376,7 @@ export default function Index() {
 
   const badgeContent = enabledProduct ? "On" : "Off";
 
-  const title = "Enable Product";
+  const title = "Show Product Section";
 
   const settingStatusMarkup = (
     <Badge
@@ -878,13 +878,40 @@ export default function Index() {
               variant="primary"
               tone="success"
               icon={EmailMajor}
-              onClick={openSendMail}
+              onClick={handleSendMail}
             >
-              Send email
+              Send Mail
             </Button>
           </div>{" "}
+          <div style={{ width: "55%", marginBottom: "1rem" }}>
+            <TextField
+              label="Subject"
+              value={subject}
+              onChange={handleChangeSubject}
+              autoComplete="off"
+              placeholder="Subject"
+            />
+          </div>
+          <div style={{ width: "55%", marginBottom: "1rem" }}>
+            <TextField
+              label="Preview Text"
+              value={previewText}
+              onChange={handleChangePreviewText}
+              multiline={4}
+              autoComplete="off"
+            />
+          </div>
+          <div style={{ width: "55%" }}>
+            <TextField
+              label="Destination Email"
+              placeholder="Destination email"
+              value={destinationMail}
+              onChange={handleChangeDestinationMail}
+              autoComplete="off"
+            />
+          </div>
           <div className="send-mail__modal">
-            <Modal
+            {/* <Modal
               open={mailActive}
               onClose={handleChangeMailActive}
               title="Destination email"
@@ -901,7 +928,7 @@ export default function Index() {
                   autoComplete="off"
                 />
               </Modal.Section>
-            </Modal>
+            </Modal> */}
           </div>
         </Card>
       </div>
@@ -917,7 +944,7 @@ export default function Index() {
                     marginBottom: "1rem",
                   }}
                 >
-                  <div style={{ width: "40%" }}>
+                  {/* <div style={{ width: "40%" }}>
                     <TextField
                       label="Subject"
                       value={subject}
@@ -925,10 +952,9 @@ export default function Index() {
                       autoComplete="off"
                       placeholder="Subject"
                     />
-                  </div>
-
+                  </div> */}
+                  {/* 
                   <div style={{ width: "55%" }}>
-                    <p>{previewText}</p>
 
                     <TextField
                       label="Preview Text"
@@ -937,7 +963,7 @@ export default function Index() {
                       multiline={4}
                       autoComplete="off"
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <Divider borderColor="border" />
                 <div
