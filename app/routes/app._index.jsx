@@ -34,8 +34,10 @@ import {
   Pagination,
   Spinner,
   MediaCard,
+  useBreakpoints,
   Modal,
   InlineStack,
+  Box,
 } from "@shopify/polaris";
 import { EmailMajor, ImageMajor } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
@@ -83,10 +85,7 @@ export const action = async ({ request }) => {
   const data = {
     ...Object.fromEntries(await request.formData()),
   };
-  console.log(data.destinationMail);
-  console.log(data.shopData);
-  console.log(data.selectedProduct);
-  console.log(data.productCaption);
+
   if (data.action == "sendmail") {
     sendMail(
       data.destinationMail,
@@ -101,7 +100,8 @@ export const action = async ({ request }) => {
       data.offetTextDesign,
       data.subtextDesign,
       data.footerDesign,
-      data.productCaption
+      data.productCaption,
+      data.enabledProduct
     );
   }
 
@@ -253,6 +253,7 @@ export default function Index() {
   const [error, setError] = useState("");
   const [queryValue, setQueryValue] = useState("");
   const { mode, setMode } = useSetIndexFiltersMode();
+  const [enabledProduct, setEnabledProduct] = useState(true);
 
   // function
 
@@ -318,40 +319,6 @@ export default function Index() {
     myshopify_domain: loaderData?.shopData?.myshopify_domain,
   };
 
-  const handleSendMail = () => {
-    const maildiv =
-      document.getElementsByClassName("email__marketing")[0].innerHTML;
-    console.log(maildiv);
-    // sendMail(destinationMail, subject, previewText, maildiv);
-    submit(
-      {
-        action: "sendmail",
-        destinationMail,
-        subject,
-        previewText,
-        maildiv,
-        offertext,
-        subtext,
-        shopData: JSON.stringify(shopData),
-        selectedProduct: JSON.stringify(actionData?.selectedProduct),
-        selectedProductImages: JSON.stringify(
-          actionData?.selectedProductImages
-        ),
-        offetTextDesign: JSON.stringify(offetTextDesign),
-        subtextDesign: JSON.stringify(subtextDesign),
-        footerDesign: JSON.stringify(footerDesign),
-        productCaption,
-        selectedResources,
-      },
-      {
-        method: "POST",
-        // action: "/send",
-      }
-    );
-
-    console.log("send mail");
-  };
-
   const handelOfferText = useCallback((newValue) => setOffertext(newValue));
   const handelProductCaption = useCallback((newValue) =>
     setProductCaption(newValue)
@@ -390,6 +357,128 @@ export default function Index() {
     if (value === "") {
       setLoading(true);
     }
+  };
+
+  // Toogle button
+
+  const handleToggle = useCallback(
+    () => setEnabledProduct((enabledProduct) => !enabledProduct),
+    []
+  );
+
+  const contentStatus = enabledProduct ? "Turn off" : "Turn on";
+
+  const toggleId = "setting-toggle-uuid";
+
+  const { mdDown } = useBreakpoints();
+
+  const badgeStatus = enabledProduct ? "success" : undefined;
+
+  const badgeContent = enabledProduct ? "On" : "Off";
+
+  const title = "Show Product Section";
+
+  const settingStatusMarkup = (
+    <Badge
+      tone={badgeStatus}
+      toneAndProgressLabelOverride={`Setting is ${badgeContent}`}
+    >
+      {badgeContent}
+    </Badge>
+  );
+
+  const helpLink = <Button variant="plain" accessibilityLabel="Learn more" />;
+
+  const settingTitle = title ? (
+    <InlineStack gap="200" wrap={false}>
+      <InlineStack gap="200" align="start" blockAlign="baseline">
+        <label htmlFor={toggleId}>
+          <Text variant="headingMd" as="h6">
+            {title}
+          </Text>
+        </label>
+        <InlineStack gap="200" align="center" blockAlign="center">
+          {settingStatusMarkup}
+          {helpLink}
+        </InlineStack>
+      </InlineStack>
+    </InlineStack>
+  ) : null;
+
+  const actionMarkup = (
+    <Button
+      role="switch"
+      id={toggleId}
+      ariaChecked={enabledProduct ? "true" : "false"}
+      onClick={handleToggle}
+      size="slim"
+    >
+      {contentStatus}
+    </Button>
+  );
+
+  const headerMarkup = (
+    <Box width="100%">
+      <InlineStack
+        gap="1200"
+        align="space-between"
+        blockAlign="start"
+        wrap={false}
+      >
+        {settingTitle}
+        {!mdDown ? (
+          <Box minWidth="fit-content">
+            <InlineStack align="end">{actionMarkup}</InlineStack>
+          </Box>
+        ) : null}
+      </InlineStack>
+    </Box>
+  );
+
+  const descriptionMarkup = (
+    <BlockStack gap="400">
+      {mdDown ? (
+        <Box width="100%">
+          <InlineStack align="start">{actionMarkup}</InlineStack>
+        </Box>
+      ) : null}
+    </BlockStack>
+  );
+
+  const handleSendMail = () => {
+    const maildiv =
+      document.getElementsByClassName("email__marketing")[0].innerHTML;
+    console.log(maildiv);
+    console.log(enabledProduct);
+    // sendMail(destinationMail, subject, previewText, maildiv);
+    submit(
+      {
+        action: "sendmail",
+        destinationMail,
+        subject,
+        previewText,
+        maildiv,
+        offertext,
+        subtext,
+        shopData: JSON.stringify(shopData),
+        selectedProduct: JSON.stringify(actionData?.selectedProduct),
+        selectedProductImages: JSON.stringify(
+          actionData?.selectedProductImages
+        ),
+        offetTextDesign: JSON.stringify(offetTextDesign),
+        subtextDesign: JSON.stringify(subtextDesign),
+        footerDesign: JSON.stringify(footerDesign),
+        productCaption,
+        selectedResources,
+        enabledProduct,
+      },
+      {
+        method: "POST",
+        // action: "/send",
+      }
+    );
+
+    console.log("send mail");
   };
 
   useEffect(() => {
@@ -789,13 +878,40 @@ export default function Index() {
               variant="primary"
               tone="success"
               icon={EmailMajor}
-              onClick={openSendMail}
+              onClick={handleSendMail}
             >
-              Send email
+              Send Mail
             </Button>
           </div>{" "}
+          <div style={{ width: "55%", marginBottom: "1rem" }}>
+            <TextField
+              label="Subject"
+              value={subject}
+              onChange={handleChangeSubject}
+              autoComplete="off"
+              placeholder="Subject"
+            />
+          </div>
+          <div style={{ width: "55%", marginBottom: "1rem" }}>
+            <TextField
+              label="Preview Text"
+              value={previewText}
+              onChange={handleChangePreviewText}
+              multiline={4}
+              autoComplete="off"
+            />
+          </div>
+          <div style={{ width: "55%" }}>
+            <TextField
+              label="Destination Email"
+              placeholder="Destination email"
+              value={destinationMail}
+              onChange={handleChangeDestinationMail}
+              autoComplete="off"
+            />
+          </div>
           <div className="send-mail__modal">
-            <Modal
+            {/* <Modal
               open={mailActive}
               onClose={handleChangeMailActive}
               title="Destination email"
@@ -812,7 +928,7 @@ export default function Index() {
                   autoComplete="off"
                 />
               </Modal.Section>
-            </Modal>
+            </Modal> */}
           </div>
         </Card>
       </div>
@@ -828,7 +944,7 @@ export default function Index() {
                     marginBottom: "1rem",
                   }}
                 >
-                  <div style={{ width: "40%" }}>
+                  {/* <div style={{ width: "40%" }}>
                     <TextField
                       label="Subject"
                       value={subject}
@@ -836,10 +952,9 @@ export default function Index() {
                       autoComplete="off"
                       placeholder="Subject"
                     />
-                  </div>
-
+                  </div> */}
+                  {/* 
                   <div style={{ width: "55%" }}>
-                    <p>{previewText}</p>
 
                     <TextField
                       label="Preview Text"
@@ -848,7 +963,7 @@ export default function Index() {
                       multiline={4}
                       autoComplete="off"
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <Divider borderColor="border" />
                 <div
@@ -907,158 +1022,168 @@ export default function Index() {
                       </div>
                     </Tooltip>
                   </div>
-                  <Tooltip active content="Click here to chenge the caption">
-                    <div
-                      style={{
-                        display: "flex",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        textAlign: "center",
-                        marginTop: "2rem",
-                        marginBottm: "1rem",
-                        borderTop: "1px solid black",
-                        paddingTop: "2rem",
-                        cursor: "pointer",
-                      }}
-                      onClick={handelClcikCaption}
-                    >
-                      <Text variant="headingLg" as="h1">
-                        {productCaption}
-                      </Text>
-                    </div>
-                  </Tooltip>
-
-                  <Tooltip active content="Click here to add the product">
-                    {" "}
-                    <div
-                      style={{
-                        margin: "1rem 0 1rem 0",
-                        cursor: "pointer",
-                        display: "flex",
-                        width: "550px",
-                        overflow: "auto",
-
-                        overflowY: "hidden",
-                      }}
-                      onClick={handleClickProduct}
-                    >
-                      {selectedResources.length == 0 ? (
-                        <div>
-                          <img
-                            alt=""
-                            width="100%"
-                            height="100%"
-                            style={{
-                              objectFit: "cover",
-                              objectPosition: "center",
-                            }}
-                            src={productSimple}
-                          />
-                        </div>
-                      ) : loading ? (
+                  {enabledProduct && (
+                    <>
+                      <Tooltip
+                        active
+                        content="Click here to chenge the caption"
+                      >
                         <div
                           style={{
                             display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
                             alignContent: "center",
+                            justifyContent: "center",
+                            textAlign: "center",
+                            marginTop: "2rem",
+                            marginBottm: "1rem",
+                            borderTop: "1px solid black",
+                            paddingTop: "2rem",
+                            cursor: "pointer",
                           }}
+                          onClick={handelClcikCaption}
                         >
-                          <Spinner size="large" accessibilityLabel="Loading" />
+                          <Text variant="headingLg" as="h1">
+                            {productCaption}
+                          </Text>
                         </div>
-                      ) : (
-                        actionData?.selectedProduct?.map((data, index) => (
-                          <div
-                            style={{
-                              marginBottom: "1rem",
-                              padding: "1rem",
-                              gap: "2rem",
-                              alignItems: "center",
-                            }}
-                            key={data.id}
-                          >
-                            <InlineStack gap={"800"}>
-                              <InlineStack gap="200">
-                                {" "}
-                                <div>
-                                  {actionData?.selectedProductImages
-                                    .filter(
-                                      (imageData) =>
-                                        imageData.product_id === data.id
-                                    )
-                                    .map((filteredImageData, index) => (
-                                      <img
-                                        alt=""
-                                        width="180px"
-                                        height="200px"
-                                        style={{
-                                          objectFit: "cover",
-                                          objectPosition: "center",
-                                        }}
-                                        src={filteredImageData.src}
-                                        key={index}
-                                      />
-                                    ))}
-                                </div>
-                              </InlineStack>
-                              <InlineStack gap="200" blockAlign="center">
-                                {" "}
-                                <div style={{ lineHeight: "1.5" }}>
-                                  <h1
-                                    style={{
-                                      fontSize: "20px",
-                                      fontWeight: "400",
-                                    }}
-                                  >
-                                    {data.title}
-                                  </h1>
-                                  <h3
-                                    style={{
-                                      fontSize: "16px",
-                                      fontWeight: "600",
-                                    }}
-                                  >
+                      </Tooltip>
+
+                      <Tooltip active content="Click here to add the product">
+                        {" "}
+                        <div
+                          style={{
+                            margin: "1rem 0 1rem 0",
+                            cursor: "pointer",
+                            display: "flex",
+                            width: "550px",
+                            overflow: "auto",
+
+                            overflowY: "hidden",
+                          }}
+                          onClick={handleClickProduct}
+                        >
+                          {selectedResources.length == 0 ? (
+                            <div>
+                              <img
+                                alt=""
+                                width="100%"
+                                height="100%"
+                                style={{
+                                  objectFit: "cover",
+                                  objectPosition: "center",
+                                }}
+                                src={productSimple}
+                              />
+                            </div>
+                          ) : loading ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                alignContent: "center",
+                              }}
+                            >
+                              <Spinner
+                                size="large"
+                                accessibilityLabel="Loading"
+                              />
+                            </div>
+                          ) : (
+                            actionData?.selectedProduct?.map((data, index) => (
+                              <div
+                                style={{
+                                  marginBottom: "1rem",
+                                  padding: "1rem",
+                                  gap: "2rem",
+                                  alignItems: "center",
+                                }}
+                                key={data.id}
+                              >
+                                <InlineStack gap={"800"}>
+                                  <InlineStack gap="200">
                                     {" "}
-                                    {loaderData?.shopData?.currency}{" "}
-                                    {data.variants[0]?.price}{" "}
-                                  </h3>
-                                  {/* <h1>{data.handle}</h1> */}
-                                  {/* <button
+                                    <div>
+                                      {actionData?.selectedProductImages
+                                        .filter(
+                                          (imageData) =>
+                                            imageData.product_id === data.id
+                                        )
+                                        .map((filteredImageData, index) => (
+                                          <img
+                                            alt=""
+                                            width="180px"
+                                            height="200px"
+                                            style={{
+                                              objectFit: "cover",
+                                              objectPosition: "center",
+                                            }}
+                                            src={filteredImageData.src}
+                                            key={index}
+                                          />
+                                        ))}
+                                    </div>
+                                  </InlineStack>
+                                  <InlineStack gap="200" blockAlign="center">
+                                    {" "}
+                                    <div style={{ lineHeight: "1.5" }}>
+                                      <h1
+                                        style={{
+                                          fontSize: "20px",
+                                          fontWeight: "400",
+                                        }}
+                                      >
+                                        {data.title}
+                                      </h1>
+                                      <h3
+                                        style={{
+                                          fontSize: "16px",
+                                          fontWeight: "600",
+                                        }}
+                                      >
+                                        {" "}
+                                        {loaderData?.shopData?.currency}{" "}
+                                        {data.variants[0]?.price}{" "}
+                                      </h3>
+                                      {/* <h1>{data.handle}</h1> */}
+                                      {/* <button
                                     url={`https://commerce-23.myshopify.com/products/${data.handle}`}
                                   >
                                     Shop now
                                   </button> */}
 
-                                  <Text>
-                                    <a
-                                      href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      style={{
-                                        display: "inline-block",
-                                        padding: "10px 20px",
-                                        backgroundColor: "white",
-                                        color: "black",
-                                        textDecoration: "none",
-                                        textAlign: "center",
-                                        fontSize: "12px",
-                                        cursor: "pointer",
-                                        borderRadius: "5px",
-                                        border: "1px solid black",
-                                        marginTop: "5px",
-                                      }}
-                                    >
-                                      Shop Now
-                                    </a>
-                                  </Text>
-                                </div>
-                              </InlineStack>
-                            </InlineStack>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </Tooltip>
+                                      <Text>
+                                        <a
+                                          href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          style={{
+                                            display: "inline-block",
+                                            padding: "10px 20px",
+                                            backgroundColor: "white",
+                                            color: "black",
+                                            textDecoration: "none",
+                                            textAlign: "center",
+                                            fontSize: "12px",
+                                            cursor: "pointer",
+                                            borderRadius: "5px",
+                                            border: "1px solid black",
+                                            marginTop: "5px",
+                                          }}
+                                        >
+                                          Shop Now
+                                        </a>
+                                      </Text>
+                                    </div>
+                                  </InlineStack>
+                                </InlineStack>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </Tooltip>
+                    </>
+                  )}
 
                   <div className="footer" style={footerDesign}>
                     <BlockStack gap={"200"}>
@@ -1288,9 +1413,22 @@ export default function Index() {
                 </Sheet>
               </div>
             )}
-            <BlockStack gap="200"></BlockStack>
 
-            <BlockStack gap="200"></BlockStack>
+            <BlockStack gap="200">
+              {" "}
+              <Card>
+                <BlockStack gap={{ xs: "400", sm: "500" }}>
+                  <Box width="100%">
+                    <BlockStack gap={{ xs: "200", sm: "400" }}>
+                      {headerMarkup}
+                      {descriptionMarkup}
+                    </BlockStack>
+                  </Box>
+                </BlockStack>
+              </Card>
+            </BlockStack>
+
+            {/* <BlockStack gap="200"></BlockStack> */}
           </Card>
         </Layout.Section>
       </Layout>

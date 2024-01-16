@@ -32,6 +32,7 @@ export const NikeReceiptEmail = ({
   subtextDesign,
   footerDesign,
   productCaption,
+  enabledProduct,
 }) => (
   <Html>
     <Head />
@@ -57,75 +58,78 @@ export const NikeReceiptEmail = ({
         </Section>
 
         <Hr style={global.hr} />
+        {enabledProduct && (
+          <Section style={paddingY}>
+            <Text style={global.heading}>{productCaption}</Text>
 
-        <Section style={paddingY}>
-          <Text style={global.heading}>{productCaption}</Text>
-          <Row style={recomendations.container}>
-            {Array.isArray(selectedProduct) ? (
-              selectedProduct.map((data, index) => (
-                <Column
-                  key={index}
-                  style={{ ...recomendations.product, paddingLeft: "4px" }}
-                  align="center"
-                >
-                  {selectedProductImages
-                    .filter((imageData) => imageData.product_id === data.id)
-                    .map((filteredImageData, index) => (
-                      <Img
-                        alt=""
-                        width="180px"
-                        height="200px"
+            <Row style={recomendations.container}>
+              {Array.isArray(selectedProduct) ? (
+                selectedProduct.map((data, index) => (
+                  <Column
+                    key={index}
+                    style={{ ...recomendations.product, paddingLeft: "4px" }}
+                    align="center"
+                  >
+                    {selectedProductImages
+                      .filter((imageData) => imageData.product_id === data.id)
+                      .map((filteredImageData, index) => (
+                        <Img
+                          alt=""
+                          width="180px"
+                          height="200px"
+                          style={{
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                          src={filteredImageData.src}
+                          key={index}
+                        />
+                      ))}
+                    <Text style={recomendations.title}>{data.title}</Text>
+                    <Text style={recomendations.title}>
+                      {data.variants[0]?.price}{" "}
+                    </Text>
+
+                    <Text>
+                      <a
+                        href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{
-                          objectFit: "cover",
-                          objectPosition: "center",
+                          display: "inline-block",
+                          padding: "10px 20px",
+                          backgroundColor: "white",
+                          color: "black",
+                          textDecoration: "none",
+                          textAlign: "center",
+                          fontSize: "12px",
+                          cursor: "pointer",
+                          borderRadius: "5px",
+                          border: "1px solid black",
+                          marginTop: "5px",
                         }}
-                        src={filteredImageData.src}
-                        key={index}
-                      />
-                    ))}
-                  <Text style={recomendations.title}>{data.title}</Text>
-                  <Text style={recomendations.title}>
-                    {data.variants[0]?.price}{" "}
-                  </Text>
+                      >
+                        Shop Now
+                      </a>
+                    </Text>
+                  </Column>
+                ))
+              ) : (
+                <Img
+                  alt=""
+                  width="180px"
+                  height="200px"
+                  style={{
+                    objectFit: "cover",
+                    objectPosition: "center",
+                  }}
+                  src={productSimple}
+                />
+              )}
+            </Row>
+          </Section>
+        )}
 
-                  <Text>
-                    <a
-                      href={`https://${shopData.myshopify_domain}/products/${data.handle}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: "inline-block",
-                        padding: "10px 20px",
-                        backgroundColor: "white",
-                        color: "black",
-                        textDecoration: "none",
-                        textAlign: "center",
-                        fontSize: "12px",
-                        cursor: "pointer",
-                        borderRadius: "5px",
-                        border: "1px solid black",
-                        marginTop: "5px",
-                      }}
-                    >
-                      Shop Now
-                    </a>
-                  </Text>
-                </Column>
-              ))
-            ) : (
-              <Img
-                alt=""
-                width="180px"
-                height="200px"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
-                src={productSimple}
-              />
-            )}
-          </Row>
-        </Section>
         <Hr style={{ ...global.hr, marginTop: "12px" }} />
         <Section style={footerDesign}>
           <Row style={footer.policy}>
