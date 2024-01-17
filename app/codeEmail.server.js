@@ -5,13 +5,13 @@ import { PlaidVerifyIdentityEmail } from "./email/discountCode";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "email.marketing.bs23@gmail.com",
-    pass: "ihvrkbkxrwmiorrv",
+    user: "EmailMarketing.Email.Order@gmail.com",
+    pass: "ghwdayetrszgfsmg",
   },
 });
 
 const mailOptions = {
-  from: "email.marketing.bs23@gmail.com",
+  from: "EmailMarketing.Email.Order@gmail.com",
   to: "bsse1111@iit.du.ac.bd",
   subject: "Test mail",
   text: "Test mail from remix server",

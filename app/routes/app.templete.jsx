@@ -121,7 +121,7 @@ export default function AdditionalPage() {
 
   return (
     <Page>
-      <ui-title-bar title="Templete page" />
+      <ui-title-bar title="Template page" />
       <PageActions
         primaryAction={
           <Button
@@ -148,9 +148,7 @@ export default function AdditionalPage() {
         }
       />
       <div style={{ marginBottom: "2rem" }}>
-        <Banner title="Templete">
-          {/* <p>Select Your templete to send an mail.</p> */}
-
+        <Banner title="Template">
           <div style={{ display: "flex", gap: "2rem", marginBottom: "1rem" }}>
             <TextField
               label="Destination Email"

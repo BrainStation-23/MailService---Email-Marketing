@@ -897,7 +897,7 @@ export default function Index() {
               label="Preview Text"
               value={previewText}
               onChange={handleChangePreviewText}
-              multiline={4}
+              multiline={2}
               autoComplete="off"
             />
           </div>
