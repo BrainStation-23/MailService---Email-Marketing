@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { DiamondAlertMinor } from "@shopify/polaris-icons";
 import {
   Form,
   useActionData,

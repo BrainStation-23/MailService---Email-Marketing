@@ -18,7 +18,7 @@ import {
 import { authenticate } from "../shopify.server";
 import { json } from "@remix-run/node";
 import { sendMail } from "../codeEmail.server";
-import { EmailMajor, ImageMajor } from "@shopify/polaris-icons";
+import { EmailMajor } from "@shopify/polaris-icons";
 
 import discountCodeTemplete from "./images/discountCodeTemplete.png";
 import { useState, useCallback } from "react";

@@ -39,7 +39,7 @@ import {
   InlineStack,
   Box,
 } from "@shopify/polaris";
-import { EmailMajor, ImageMajor } from "@shopify/polaris-icons";
+import { EmailMajor } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
 import productSimple from "./images/productSimple.png";
 
