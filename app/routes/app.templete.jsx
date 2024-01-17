@@ -18,7 +18,6 @@ import {
 import { authenticate } from "../shopify.server";
 import { json } from "@remix-run/node";
 import { sendMail } from "../codeEmail.server";
-import { EmailMajor } from "@shopify/polaris-icons";
 
 import discountCodeTemplete from "./images/discountCodeTemplete.png";
 import { useState, useCallback } from "react";
@@ -140,7 +139,6 @@ export default function AdditionalPage() {
             primary
             tone="success"
             variant="primary"
-            icon={EmailMajor}
             onClick={handelSendMailCode}
           >
             Send mail

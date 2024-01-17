@@ -39,7 +39,6 @@ import {
   InlineStack,
   Box,
 } from "@shopify/polaris";
-import { EmailMajor } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
 import productSimple from "./images/productSimple.png";
 
@@ -874,12 +873,7 @@ export default function Index() {
               justifyContent: "end",
             }}
           >
-            <Button
-              variant="primary"
-              tone="success"
-              icon={EmailMajor}
-              onClick={handleSendMail}
-            >
+            <Button variant="primary" tone="success" onClick={handleSendMail}>
               Send Mail
             </Button>
           </div>{" "}
