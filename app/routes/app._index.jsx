@@ -270,18 +270,34 @@ export default function Index() {
   const handleRangeLineHEightChangeSubtext = useCallback((value) =>
     setLineHeightSubtext(value)
   );
+
   const toggleSheetActive = useCallback(
     () => setSheetDiscount((sheetDiscount) => !sheetDiscount),
     []
   );
+  const handelOpenMainTextSetting = useCallback(
+    () => setSheetDiscount((sheetDiscount) => !sheetDiscount),
+    []
+  );
+
   const toggleSheetActiveCaption = useCallback(
     () => setSheetCaption((sheetCaption) => !sheetCaption),
     []
   );
+  const handelOpenCaptionSetting = useCallback(
+    () => setSheetCaption((sheetCaption) => !sheetCaption),
+    []
+  );
+
   const toggleSheetActiveSubtext = useCallback(
     () => setSheetSubtext((sheetSubtext) => !sheetSubtext),
     []
   );
+  const handelOpenSubTextSetting = useCallback(
+    () => setSheetSubtext((sheetSubtext) => !sheetSubtext),
+    []
+  );
+
   const handleChangePreviewText = useCallback((newValue) =>
     setPreviewText(newValue)
   );
@@ -299,6 +315,11 @@ export default function Index() {
     setProductModal(true);
     // submit({ action: "initial", query: "" }, { method: "POST" });
   };
+
+  const handelAddProducteStting = () => {
+    setProductModal(true);
+  };
+
   const handleChangeProductModal = () => {
     setProductModal(false);
   };
@@ -319,6 +340,7 @@ export default function Index() {
   };
 
   const handelOfferText = useCallback((newValue) => setOffertext(newValue));
+
   const handelProductCaption = useCallback((newValue) =>
     setProductCaption(newValue)
   );
@@ -991,7 +1013,14 @@ export default function Index() {
                   </BlockStack>
                   <div style={offetTextDesign} onClick={handleClick}>
                     <BlockStack gap={"200"}>
-                      <Tooltip active content="Click here to chenge the text">
+                      <Tooltip
+                        width="wide"
+                        content={
+                          <Text variant="headingXl" as="h1">
+                            Click here to chenge the text
+                          </Text>
+                        }
+                      >
                         <Text variant="headingLg" as="h5">
                           <p style={offertextP}> {offertext}</p>
                         </Text>
@@ -1000,7 +1029,14 @@ export default function Index() {
                   </div>
 
                   <div style={subtextDesign} onClick={handleClickSubtext}>
-                    <Tooltip active content="Click here to chenge the text">
+                    <Tooltip
+                      width="wide"
+                      content={
+                        <Text variant="headingXl" as="h1">
+                          Click here to chenge the text
+                        </Text>
+                      }
+                    >
                       <div>
                         <Text variant="headingLg" as="h5">
                           <p
@@ -1019,8 +1055,12 @@ export default function Index() {
                   {enabledProduct && (
                     <>
                       <Tooltip
-                        active
-                        content="Click here to chenge the caption"
+                        width="wide"
+                        content={
+                          <Text variant="headingXl" as="h1">
+                            Click here to chenge the caption
+                          </Text>
+                        }
                       >
                         <div
                           style={{
@@ -1042,7 +1082,14 @@ export default function Index() {
                         </div>
                       </Tooltip>
 
-                      <Tooltip active content="Click here to add the product">
+                      <Tooltip
+                        width="wide"
+                        content={
+                          <Text variant="headingXl" as="h1">
+                            Click here to add the product
+                          </Text>
+                        }
+                      >
                         {" "}
                         <div
                           style={{
@@ -1228,7 +1275,7 @@ export default function Index() {
                       width: "100%",
                     }}
                   >
-                    <Button onClick={toggleSheetActive}>Cancel</Button>
+                    <Button onClick={toggleSheetActiveCaption}>Cancel</Button>
                   </div>
                 </Sheet>
               </div>
@@ -1410,16 +1457,46 @@ export default function Index() {
 
             <BlockStack gap="200">
               {" "}
-              <Card>
-                <BlockStack gap={{ xs: "400", sm: "500" }}>
-                  <Box width="100%">
-                    <BlockStack gap={{ xs: "200", sm: "400" }}>
-                      {headerMarkup}
-                      {descriptionMarkup}
-                    </BlockStack>
-                  </Box>
+              <BlockStack gap={{ xs: "400", sm: "500" }}>
+                <BlockStack gap={{ xs: "200", sm: "400" }}>
+                  {headerMarkup}
+                  {descriptionMarkup}
                 </BlockStack>
-              </Card>
+              </BlockStack>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Text>Main text setting</Text>
+                <Button onClick={handelOpenMainTextSetting}>Open</Button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: "1rem",
+                }}
+              >
+                <Text>Sub text setting</Text>
+                <Button onClick={handelOpenSubTextSetting}>Open</Button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: "1rem",
+                }}
+              >
+                <Text>Product Caption setting</Text>
+                <Button onClick={handelOpenCaptionSetting}> Open</Button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: "1rem",
+                }}
+              >
+                <Text>Add product</Text>
+                <Button onClick={handelAddProducteStting}>Open</Button>
+              </div>
             </BlockStack>
 
             {/* <BlockStack gap="200"></BlockStack> */}
