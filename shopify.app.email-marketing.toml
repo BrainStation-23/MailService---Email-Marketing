@@ -2,7 +2,7 @@
 
 name = "email-marketing"
 client_id = "d2afca44454d64a1f04257f76f81f9b1"
-application_url = "https://travesti-suzuki-cole-interesting.trycloudflare.com"
+application_url = "https://demanding-premises-engaging-labs.trycloudflare.com"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ scopes = "read_products,write_products,read_customers,read_orders,write_orders,r
 
 [auth]
 redirect_urls = [
-  "https://travesti-suzuki-cole-interesting.trycloudflare.com/auth/callback",
-  "https://travesti-suzuki-cole-interesting.trycloudflare.com/auth/shopify/callback",
-  "https://travesti-suzuki-cole-interesting.trycloudflare.com/api/auth/callback"
+  "https://demanding-premises-engaging-labs.trycloudflare.com/auth/callback",
+  "https://demanding-premises-engaging-labs.trycloudflare.com/auth/shopify/callback",
+  "https://demanding-premises-engaging-labs.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
