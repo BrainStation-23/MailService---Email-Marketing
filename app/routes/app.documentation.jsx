@@ -42,7 +42,7 @@ export default function AdditionalPage() {
               <iframe
                 title="Email: Marketing-Order Receipt app set up isnstruction Video"
                 style={videoStyle}
-                src="https://youtu.be/uB_qCJ69sZM"
+                src="https://www.youtube.com/embed/uB_qCJ69sZM"
                 frameBorder="0"
                 allowFullScreen
               ></iframe>
