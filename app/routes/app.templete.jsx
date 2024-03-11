@@ -120,7 +120,7 @@ export default function AdditionalPage() {
 
   return (
     <Page>
-      <ui-title-bar title="Template page" />
+      <ui-title-bar title=" Discount Code Template page" />
       <PageActions
         primaryAction={
           <Button

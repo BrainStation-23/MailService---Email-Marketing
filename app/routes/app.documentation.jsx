@@ -25,8 +25,8 @@ export default function AdditionalPage() {
             <BlockStack gap="300">
               <Text as="p" variant="bodyMd">
                 <b>
-                  Follow these video tutorial to set up the "Email-Template &
-                  Order Receipt" app and manage everything
+                  Follow these video tutorial to set up the "Email:
+                  Marketing-Order Receipt" app and manage everything
                 </b>
               </Text>
             </BlockStack>
@@ -40,9 +40,9 @@ export default function AdditionalPage() {
             <Badge status="attention"> </Badge>
             <Card>
               <iframe
-                title="Countdown app set up isnstruction Video"
+                title="Email: Marketing-Order Receipt app set up isnstruction Video"
                 style={videoStyle}
-                src="https://www.youtube.com/embed/6k6VLRn8lZ0"
+                src="https://youtu.be/uB_qCJ69sZM"
                 frameBorder="0"
                 allowFullScreen
               ></iframe>

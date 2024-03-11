@@ -23,8 +23,8 @@ export default function App() {
           Home
         </Link>
         <Link to="/app/documentation">Documentation page</Link>
-        <Link to="/app/templete">Template </Link>
-        <Link to="/app/orders">Order page </Link>
+        <Link to="/app/templete">Discount Code Template page </Link>
+        <Link to="/app/orders">Order Receipt email </Link>
       </ui-nav-menu>
       <Outlet />
     </AppProvider>
